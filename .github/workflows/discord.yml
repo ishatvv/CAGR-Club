@@ -1,0 +1,26 @@
+name: Discord posts
+on:
+  schedule:
+    - cron: '0 3 * * *'    # 08:30 IST every day: daily question
+    - cron: '30 4 * * 0'   # 10:00 IST every Sunday: lesson of the week
+  workflow_dispatch:
+    inputs:
+      kind:
+        description: 'daily or weekly'
+        default: 'daily'
+jobs:
+  post:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Post
+        env:
+          DISCORD_WEBHOOK_DAILY: ${{ secrets.DISCORD_WEBHOOK_DAILY }}
+          DISCORD_WEBHOOK_LESSONS: ${{ secrets.DISCORD_WEBHOOK_LESSONS }}
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then KIND="${{ github.event.inputs.kind }}";
+          elif [ "${{ github.event.schedule }}" = "30 4 * * 0" ]; then KIND=weekly; else KIND=daily; fi
+          node scripts/discord-post.js "$KIND"
