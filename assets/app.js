@@ -173,8 +173,8 @@ function showClear(){}
 /* ---------- views ---------- */
 var R={},A={};
 R.home=function(){var answered=Object.keys(ans).length;
-  return '<section class="hero3"><canvas class="candles" id="candles" aria-hidden="true"></canvas><p class="eyebrow">Equity research, minus the AI slop</p><h1 class="split">'+splitWords([['Anyone can ask AI for a DCF.',0],['Few can tell you why it’s',1]])+' <em class="scrib"><span class="w"><span style="--i:13">wrong.</span></span><svg viewBox="0 0 300 30" preserveAspectRatio="none" aria-hidden="true"><path d="M4 20C60 8 140 6 296 14M30 26C110 18 200 18 270 22"/></svg></em></h1>'+
-  '<div class="hero3-f"><p class="lede">CAGR Club teaches the judgment behind equity research: reading the accounts, catching the forecast that cannot happen, and building a view you can defend.</p><div class="row">'+joinBtn('xl')+'<a class="btn ghost xl mag" href="#roadmap">Start learning'+ico('arrow')+'</a></div></div>'+creds()+'</section>'+
+  return '<section class="hero3"><canvas class="candles" id="candles" aria-hidden="true"></canvas><h1 class="split">'+splitWords([['Learn to read a business',0],['like an',1]])+' <em class="scrib"><span class="w"><span style="--i:7">analyst.</span></span><svg viewBox="0 0 300 30" preserveAspectRatio="none" aria-hidden="true"><path d="M4 20C60 8 140 6 296 14M30 26C110 18 200 18 270 22"/></svg></em></h1>'+
+  '<div class="hero3-f"><p class="lede">Equity research, taught in depth: reading the accounts, judging the business, valuing it and knowing the sector. Then daily practice until it sticks.</p><div class="row">'+joinBtn('xl')+'<a class="btn ghost xl mag" href="#roadmap">Start learning'+ico('arrow')+'</a></div></div>'+creds()+'</section>'+
   storyHtml()+
   '<section class="sec"><div class="sec-h" data-rv><div><p class="eyebrow">The curriculum</p><h2>Four archives. <em>Read in order.</em></h2></div><a class="btn ghost mag" href="#roadmap">See every lesson'+ico('arrow')+'</a></div>'+folders()+'</section>'+
   '<section class="sec"><div class="sec-h" data-rv><div><p class="eyebrow">Practice</p><h2>Then you <em>do the reps.</em></h2></div></div><div class="trio">'+

@@ -9,7 +9,7 @@
   --gold:#D4920F; --gold-soft:#F6E7BE; --paper:#F4EFE3; --sky:#3E7AA6;
   --glass:rgba(244,239,227,.8); --shadow:0 26px 60px -30px rgba(17,33,27,.35);
   --violet:var(--acc); --pink:var(--neg); --mint:var(--pos); --sun:var(--gold); --red:var(--neg); --edge:var(--ink);
-  --serif:'Newsreader','Iowan Old Style','Times New Roman',serif; --sans:'Geist','Helvetica Neue',system-ui,-apple-system,sans-serif; --mono:'Geist Mono',ui-monospace,'SF Mono',Menlo,Consolas,monospace;
+  --serif:'Source Serif 4','Iowan Old Style','Times New Roman',serif; --sans:'Geist','Helvetica Neue',system-ui,-apple-system,sans-serif; --mono:'Geist Mono',ui-monospace,'SF Mono',Menlo,Consolas,monospace;
   --ease:cubic-bezier(.2,.8,.2,1);
   color-scheme:light;
 }
@@ -776,3 +776,8 @@ em{color:var(--acc)}
 .mk-bgm .mk-e{fill-opacity:.32}
 :root[data-theme="dark"] .analyst p b,:root[data-theme="dark"] .analyst .link{color:#A86A00}
 :root[data-theme="dark"] .an-h .mono-s{color:#5c6b64}
+/* headline type: tight modern sans, serif italic accents */
+h1,h2,.big-serif,.split{font-family:var(--sans);font-weight:600;letter-spacing:-.045em}
+h1 em,h2 em,.big-serif em,.split em{font-family:var(--serif);font-weight:400;font-style:italic;letter-spacing:-.02em}
+.split{font-size:clamp(46px,7vw,108px);line-height:1;max-width:12ch}
+.module h2,.story h2,.show-h h2{letter-spacing:-.04em}
