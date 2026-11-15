@@ -201,8 +201,8 @@ FLAWS=FLAWS.concat([
  ['Retailer: like-for-like growth 6%, new stores add 8%; total revenue growth about 14.5%.',false,'1.06 × 1.08 = 1.145. The pieces add up.']
 ]);
 var ROLES=[
- {id:'era',sym:'ERA',t:'Equity Research Analyst',live:true,d:'Read accounts, value businesses, build models and pitch stocks.',mods:MODULES.map(function(m){return m.t}),hue:'violet'},
- {id:'cra',sym:'CRA',t:'Credit Analyst',live:false,d:'Read companies the way lenders do: cash, leverage, covenants and recovery.',mods:['Cash before earnings','Leverage and coverage','Debt documents and covenants','Ratings method','Bond maths','The credit memo'],hue:'mint'},
- {id:'iba',sym:'IBA',t:'Investment Banking Analyst',live:false,d:'Comparable companies, precedent deals, merger models and pitch books.',mods:['Accounting for deals','Trading comparables','Precedent transactions','Merger models','LBO basics','The pitch book'],hue:'pink'},
- {id:'pea',sym:'PEA',t:'Private Equity Analyst',live:false,d:'Screen deals, test unit economics, model buyouts and write the investment memo.',mods:['Screening deals','Unit economics','LBO modelling','Due diligence','Value creation plans','The investment memo'],hue:'sun'}
+ {id:'er',sym:'ER',t:'Equity Research',live:true,d:'Read accounts, value businesses, build models and pitch stocks.',mods:MODULES.map(function(m){return m.t}),hue:'jade'},
+ {id:'ra',sym:'RA',t:'Risk Analyst',live:false,d:'Measure what can go wrong: market, credit and liquidity risk, stress tests and capital.',mods:['Returns, volatility and correlation','Value at risk and expected shortfall','Credit risk: PD, LGD and EAD','Liquidity and funding risk','Stress tests and scenarios','Basel capital rules'],hue:'banana'},
+ {id:'ib',sym:'IB',t:'Investment Banking',live:false,d:'Comparable companies, precedent deals, merger models and pitch books.',mods:['Accounting for deals','Trading comparables','Precedent transactions','Merger models','LBO basics','The pitch book'],hue:'coral'},
+ {id:'pe',sym:'PE',t:'Private Equity',live:false,d:'Screen deals, test unit economics, model buyouts and write the investment memo.',mods:['Screening deals','Unit economics','LBO modelling','Due diligence','Value creation plans','The investment memo'],hue:'sky'}
 ];

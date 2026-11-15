@@ -7,3 +7,4 @@ wrangler.jsonc
 scripts
 node_modules
 .wrangler
+src
