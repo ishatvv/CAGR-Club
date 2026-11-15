@@ -18,6 +18,22 @@ export default {
       await env.SUBS.put(key, JSON.stringify({ t: new Date().toISOString(), src: String(body.src || '').slice(0, 40), country: (req.cf && req.cf.country) || '' }));
       return json({ ok: true });
     }
+    if (url.pathname === '/api/subscribers') {
+      // Export: https://cagrclub.com/api/subscribers?key=YOUR_ADMIN_KEY  (set ADMIN_KEY as a Worker secret)
+      if (!env.ADMIN_KEY || url.searchParams.get('key') !== env.ADMIN_KEY) return json({ error: 'forbidden' }, 403);
+      if (!env.SUBS) return json({ error: 'not_ready' }, 503);
+      const rows = ['email,signed_up_at,source,country'];
+      let cursor;
+      do {
+        const page = await env.SUBS.list({ prefix: 'sub:', cursor });
+        for (const k of page.keys) {
+          const v = JSON.parse((await env.SUBS.get(k.name)) || '{}');
+          rows.push([k.name.slice(4), v.t || '', v.src || '', v.country || ''].map(x => '"' + String(x).replace(/"/g, '""') + '"').join(','));
+        }
+        cursor = page.list_complete ? null : page.cursor;
+      } while (cursor);
+      return new Response(rows.join('\n'), { headers: { 'content-type': 'text/csv; charset=utf-8', 'content-disposition': 'attachment; filename="cagr-club-subscribers.csv"', 'cache-control': 'no-store' } });
+    }
     return env.ASSETS.fetch(req);
   }
 };
