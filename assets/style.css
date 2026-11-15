@@ -1007,3 +1007,27 @@ body.modal-open{overflow:hidden}
 .m-opt.wrong{border-color:var(--neg);background:var(--neg-soft)}
 .drill .big{font-size:clamp(20px,2.2vw,28px);font-weight:500;letter-spacing:-.02em;line-height:1.35;min-height:2.7em}
 @media (max-width:620px){.m-opts{grid-template-columns:minmax(0,1fr)}}
+/* lesson: long-form + go deeper */
+.lesson article>p,.lesson article h2+p,.lesson article p{font-size:17.5px;line-height:1.78}
+.lesson article h2{font-size:clamp(24px,2.4vw,32px)!important;letter-spacing:-.035em;margin-top:34px}
+.lesson article p+p{margin-top:2px}
+.vids{display:grid;gap:12px}
+.vid{display:grid;grid-template-columns:260px minmax(0,1fr);gap:18px;align-items:center;padding:12px;border-radius:20px;border:1px solid var(--line);background:var(--surface);text-decoration:none;color:var(--ink);transition:border-color .2s,transform .3s var(--ease)}
+.vid:hover{border-color:var(--line2);transform:translateY(-2px)}
+.vid-th{position:relative;aspect-ratio:16/9;border-radius:12px;background:var(--raised) center/cover no-repeat;display:grid;place-items:center;overflow:hidden}
+.vid-th i{width:52px;height:52px;border-radius:50%;background:rgba(0,0,0,.65);display:grid;place-items:center;color:#fff;transition:transform .3s var(--ease)}
+.vid:hover .vid-th i{transform:scale(1.1)}
+.vid-th .i{width:20px;height:20px;stroke:none;margin-left:3px}
+.vid-b{display:flex;flex-direction:column;gap:5px;min-width:0}
+.vid-b b{font-size:17px;letter-spacing:-.02em}
+.vid-b small,.paper small{font-size:13px;color:var(--faint)}
+.vid-b span,.paper>span:not(.pp-k){font-size:14.5px;color:var(--muted);line-height:1.5}
+.papers{display:grid;gap:10px;margin-top:4px}
+.paper{position:relative;display:flex;flex-direction:column;gap:6px;padding:18px 48px 18px 20px;border-radius:18px;border:1px solid var(--line);background:var(--surface);text-decoration:none;color:var(--ink);transition:border-color .2s}
+.paper:hover{border-color:var(--line2)}
+.paper b{font-size:16.5px;letter-spacing:-.015em;line-height:1.35}
+.paper>.i{position:absolute;right:18px;top:20px;width:17px;height:17px;color:var(--muted)}
+.pp-k{font:500 10.5px var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--acc)}
+.paper.lk .pp-k{color:var(--muted)}
+.worked{font-size:13.5px}
+@media (max-width:620px){.vid{grid-template-columns:minmax(0,1fr)}.lesson article p{font-size:16.5px}}

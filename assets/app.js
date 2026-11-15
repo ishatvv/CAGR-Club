@@ -14,7 +14,7 @@ function pad2(n){return (n<10?'0':'')+n}
 var RM=window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches;
 var FINE=window.matchMedia&&matchMedia('(hover:hover) and (pointer:fine)').matches;
 
-var I={replay:'<path d="M4 12a8 8 0 1 0 2.3-5.6M4 4v4h4"/>',map:'<path d="M9 4 3 6v14l6-2 6 2 6-2V4l-6 2-6-2zM9 4v14M15 6v14"/>',target:'<circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="4"/><circle cx="12" cy="12" r=".5"/>',cal:'<path d="M4 6h16v14H4zM4 10h16M8 3v4M16 3v4"/>',book:'<path d="M5 4h11a3 3 0 0 1 3 3v13H8a3 3 0 0 1-3-3zM5 17a3 3 0 0 1 3-3h11"/>',home:'<path d="M4 11 12 4l8 7v9h-5v-6H9v6H4z"/>',search:'<circle cx="11" cy="11" r="6"/><path d="m20 20-4.5-4.5"/>',flame:'<path d="M12 3c1 4 5 5.5 5 10a5 5 0 0 1-10 0c0-2 1-3.2 2-4 0 2 1 3 2 3 0-3-1-5 1-9z"/>',sun:'<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>',moon:'<path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z"/>',check:'<path d="m5 12 5 5 9-10"/>',x:'<path d="M6 6l12 12M18 6 6 18"/>',arrow:'<path d="M5 12h14M13 6l6 6-6 6"/>',left:'<path d="M19 12H5M11 6l-6 6 6 6"/>',spark:'<path d="M12 3v6M12 15v6M3 12h6M15 12h6"/>',flag:'<path d="M5 21V4h11l-2 4 2 4H5"/>',bolt:'<path d="M13 3 5 14h6l-1 7 8-11h-6z"/>',lock:'<rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/>',ext:'<path d="M14 4h6v6M20 4l-9 9M18 14v6H4V6h6"/>',clock:'<circle cx="12" cy="12" r="8"/><path d="M12 8v4l3 2"/>',mail:'<rect x="3" y="5" width="18" height="14" rx="2"/><path d="m4 7 8 6 8-6"/>',up:'<path d="M12 19V5M6 11l6-6 6 6"/>'};
+var I={play:'<path d="M8 5v14l11-7z" fill="currentColor"/>',replay:'<path d="M4 12a8 8 0 1 0 2.3-5.6M4 4v4h4"/>',map:'<path d="M9 4 3 6v14l6-2 6 2 6-2V4l-6 2-6-2zM9 4v14M15 6v14"/>',target:'<circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="4"/><circle cx="12" cy="12" r=".5"/>',cal:'<path d="M4 6h16v14H4zM4 10h16M8 3v4M16 3v4"/>',book:'<path d="M5 4h11a3 3 0 0 1 3 3v13H8a3 3 0 0 1-3-3zM5 17a3 3 0 0 1 3-3h11"/>',home:'<path d="M4 11 12 4l8 7v9h-5v-6H9v6H4z"/>',search:'<circle cx="11" cy="11" r="6"/><path d="m20 20-4.5-4.5"/>',flame:'<path d="M12 3c1 4 5 5.5 5 10a5 5 0 0 1-10 0c0-2 1-3.2 2-4 0 2 1 3 2 3 0-3-1-5 1-9z"/>',sun:'<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>',moon:'<path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z"/>',check:'<path d="m5 12 5 5 9-10"/>',x:'<path d="M6 6l12 12M18 6 6 18"/>',arrow:'<path d="M5 12h14M13 6l6 6-6 6"/>',left:'<path d="M19 12H5M11 6l-6 6 6 6"/>',spark:'<path d="M12 3v6M12 15v6M3 12h6M15 12h6"/>',flag:'<path d="M5 21V4h11l-2 4 2 4H5"/>',bolt:'<path d="M13 3 5 14h6l-1 7 8-11h-6z"/>',lock:'<rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/>',ext:'<path d="M14 4h6v6M20 4l-9 9M18 14v6H4V6h6"/>',clock:'<circle cx="12" cy="12" r="8"/><path d="M12 8v4l3 2"/>',mail:'<rect x="3" y="5" width="18" height="14" rx="2"/><path d="m4 7 8 6 8-6"/>',up:'<path d="M12 19V5M6 11l6-6 6 6"/>'};
 function ico(n){return '<svg class="i" viewBox="0 0 24 24" aria-hidden="true">'+I[n]+'</svg>'}
 
 /* ---------- mascot ---------- */
@@ -27,7 +27,7 @@ function eyeReq(){if(!eyeQ){eyeQ=true;requestAnimationFrame(eyes)}}
 window.addEventListener('pointermove',function(e){ptr.x=e.clientX;ptr.y=e.clientY;eyeReq()},{passive:true});
 (function blink(){setTimeout(function(){$$('svg.mk').forEach(function(s){s.classList.add('blink')});setTimeout(function(){$$('svg.mk').forEach(function(s){s.classList.remove('blink')})},170);blink()},2600+Math.random()*3600)})();
 /* ---------- state ---------- */
-var done=store.get('done',{}),ans=store.get('ans',{}),uid=0,timers=[];
+var done=store.get('done2',{}),ans=store.get('ans',{}),uid=0,timers=[];
 var DAY=Math.floor(Date.now()/864e5),BASE=Math.floor(Date.UTC(2026,10,14)/864e5);
 function daySet(d){var t=[(d*7)%QS.length,(d*7+13)%QS.length,(d*7+29)%QS.length];if(t[1]===t[0])t[1]=(t[1]+1)%QS.length;if(t[2]===t[0]||t[2]===t[1])t[2]=(t[2]+2)%QS.length;return t}
 var todays=daySet(DAY);
@@ -296,13 +296,18 @@ R.roadmap=function(){var n=lessonCount(),tot=LESSONS.length,pc=n/tot,C=2*Math.PI
   '<p class="small soon-note">Risk, investment banking and private equity tracks come later. Equity research first, done properly.</p>'};
 A.roadmap=function(open){tilt($('view'));magnet($('view'));if(open){var el=$('mod-'+open);if(el)setTimeout(function(){scrollToEl(el)},80)}};
 
+function deeper(L){if(!L.papers&&!L.videos&&!L.links)return '';var h='<h2 id="sd">Go deeper</h2>';
+  if(L.videos)h+='<div class="vids">'+L.videos.map(function(v){return '<a class="vid" href="https://www.youtube.com/watch?v='+v.id+'" target="_blank" rel="noopener" data-cur="Watch"><span class="vid-th" style="background-image:url(https://i.ytimg.com/vi/'+v.id+'/hqdefault.jpg)"><i>'+ico('play')+'</i></span><span class="vid-b"><b>'+v.t+'</b><small>'+v.ch+' · YouTube</small><span>'+v.why+'</span></span></a>'}).join('')+'</div>';
+  if(L.papers)h+='<div class="papers">'+L.papers.map(function(p){return '<a class="paper" href="'+p.u+'" target="_blank" rel="noopener"><span class="pp-k">Research paper</span><b>'+esc(p.t)+'</b><small>'+esc(p.a)+' · '+p.y+' · <i>'+esc(p.src)+'</i></small><span>'+p.why+'</span>'+ico('ext')+'</a>'}).join('')+'</div>';
+  if(L.links)h+='<div class="papers">'+L.links.map(function(p){return '<a class="paper lk" href="'+p.u+'" target="_blank" rel="noopener"><span class="pp-k">'+esc(p.src)+'</span><b>'+esc(p.t)+'</b><span>'+p.why+'</span>'+ico('ext')+'</a>'}).join('')+'</div>';
+  return h}
 R.lesson=function(k){var n=+k,L=LESSONS[n-1];if(!L)return R.roadmap();var mi=modOf(n),rail='',body='';
-  L.secs.forEach(function(s,i){body+='<h2 id="s'+i+'">'+s[0]+'</h2><p>'+s[1]+'</p>';rail+='<button type="button" data-jump="s'+i+'">'+s[0]+'</button>'});
+  L.secs.forEach(function(s,i){body+='<h2 id="s'+i+'">'+s[0]+'</h2>'+(s[1].charAt(0)==='<'?s[1]:'<p>'+s[1]+'</p>');rail+='<button type="button" data-jump="s'+i+'">'+s[0]+'</button>'});
   if(L.w){body+='<h2 id="sw">Try it</h2><div class="card pad" id="lw"></div>';rail+='<button type="button" data-jump="sw">Try it</button>'}
-  rail+='<button type="button" data-jump="se">Worked example</button><button type="button" data-jump="sc">Check yourself</button>';
+  rail+='<button type="button" data-jump="se">Worked example</button><button type="button" data-jump="sc">Check yourself</button>'+((L.papers||L.videos||L.links)?'<button type="button" data-jump="sd">Go deeper</button>':'');
   return '<div class="lesson"><article><div class="crumbs"><a href="#roadmap">Roadmap</a><span>/</span><a href="#roadmap-'+(mi+1)+'">'+pad2(mi+1)+' · '+MODULES[mi].t+'</a></div><p class="mono-s">LESSON '+pad2(n)+' OF '+LESSONS.length+' · ABOUT '+L.min+' MIN</p><h1 class="big-serif">'+L.t+'</h1><p class="lede">'+L.sum+'</p><div class="key">'+L.key+'</div>'+body+
   '<h2 id="se">Worked example</h2><div class="worked">'+L.ex+'</div><h2 id="sc">Check yourself</h2><div class="reveal"><p>'+L.cq+'</p><div id="ca"><button class="btn ghost sm" type="button" id="ca-b">Reveal the answer</button></div></div>'+
-  '<div class="done-row"><span>'+(done[n]?'You finished this lesson.':'Finished reading?')+'</span><button class="btn sm '+(done[n]?'ghost':'pri')+'" type="button" data-done="'+n+'">'+(done[n]?'Mark as not done':'Mark complete')+'</button></div>'+
+  deeper(L)+'<div class="done-row"><span>'+(done[n]?'You finished this lesson.':'Finished reading?')+'</span><button class="btn sm '+(done[n]?'ghost':'pri')+'" type="button" data-done="'+n+'">'+(done[n]?'Mark as not done':'Mark complete')+'</button></div>'+
   '<nav class="pn">'+(n>1?'<a href="#lesson-'+(n-1)+'"><small>Previous</small>'+LESSONS[n-2].t+'</a>':'<span></span>')+(n<LESSONS.length?'<a href="#lesson-'+(n+1)+'"><small>Next</small>'+LESSONS[n].t+'</a>':'<a href="#practice"><small>Next</small>Test yourself in practice</a>')+'</nav></article><aside class="rail"><p class="mono-s">ON THIS PAGE</p>'+rail+'</aside></div>'};
 A.lesson=function(k){var L=LESSONS[+k-1];if(!L)return;if(L.w)MOUNT[L.w]($('lw'));$('ca-b').addEventListener('click',function(){$('ca').innerHTML='<p style="font-weight:500">'+L.ca+'</p>'});spy()};
 
@@ -462,7 +467,7 @@ document.addEventListener('click',function(e){var t=e.target,b;
   if((b=t.closest('[data-az]'))){scrollToEl($('az-'+b.dataset.az),240);return}
   if((b=t.closest('[data-rt]'))){rType=b.dataset.rt;$$('[data-rt]').forEach(function(x){x.classList.toggle('on',x===b)});rHtml();return}
   if((b=t.closest('[data-jump]'))){scrollToEl($(b.dataset.jump));return}
-  if((b=t.closest('[data-done]'))){var n=b.dataset.done;done[n]=!done[n];store.set('done',done);toast(done[n]?'Lesson complete':'Marked as not done');if(done[n]){var r=b.getBoundingClientRect();confetti(r.left+r.width/2,r.top)}var y=window.scrollY;$('view').innerHTML=R.lesson(n);A.lesson(n);reveal($('view'));window.scrollTo(0,y);return}
+  if((b=t.closest('[data-done]'))){var n=b.dataset.done;done[n]=!done[n];store.set('done2',done);toast(done[n]?'Lesson complete':'Marked as not done');if(done[n]){var r=b.getBoundingClientRect();confetti(r.left+r.width/2,r.top)}var y=window.scrollY;$('view').innerHTML=R.lesson(n);A.lesson(n);reveal($('view'));window.scrollTo(0,y);return}
   if(t===$('pal'))closePal()});
 document.addEventListener('keydown',function(e){var t=e.target,inp=t.tagName==='INPUT'||t.tagName==='TEXTAREA';
   if(e.key==='Escape'&&$('jm')&&!$('jm').hidden){closeJoin();return}
