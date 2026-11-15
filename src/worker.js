@@ -13,9 +13,19 @@ async function token(email, secret) {
 }
 const unsubUrl = async (email, env) => SITE + '/api/unsubscribe?e=' + encodeURIComponent(email) + '&t=' + await token(email, env.ADMIN_KEY);
 
+// Sends one email through Brevo (free: 300 a day) or, if that key is absent, Resend.
+async function sendMail(env, to, subject, html, unsub) {
+  const from = env.MAIL_FROM || 'CAGR Club <club@cagrclub.com>';
+  const m = from.match(/^(.*?)\s*<(.+)>$/) || [null, 'CAGR Club', from];
+  const headers = { 'List-Unsubscribe': '<' + unsub + '>', 'List-Unsubscribe-Post': 'List-Unsubscribe=One-Click' };
+  if (env.BREVO_API_KEY) return fetch('https://api.brevo.com/v3/smtp/email', { method: 'POST', headers: { 'api-key': env.BREVO_API_KEY, 'content-type': 'application/json', accept: 'application/json' },
+    body: JSON.stringify({ sender: { name: m[1] || 'CAGR Club', email: m[2] }, to: [{ email: to }], subject, htmlContent: html, headers }) });
+  return fetch('https://api.resend.com/emails', { method: 'POST', headers: { authorization: 'Bearer ' + env.RESEND_API_KEY, 'content-type': 'application/json' },
+    body: JSON.stringify({ from, to: [to], subject, html, headers }) });
+}
 // Welcome email, sent once on sign-up when RESEND_API_KEY is set. Plain, readable, one link that matters.
 async function welcome(email, env) {
-  if (!env.RESEND_API_KEY || !env.ADMIN_KEY) return;
+  if (!(env.BREVO_API_KEY || env.RESEND_API_KEY) || !env.ADMIN_KEY) return;
   const u = await unsubUrl(email, env);
   const html = `<div style="font:16px/1.6 -apple-system,Segoe UI,Helvetica,Arial,sans-serif;color:#111;max-width:560px;margin:0 auto;padding:24px">
 <p style="font-size:20px;font-weight:600;margin:0 0 16px">You're in.</p>
@@ -24,8 +34,7 @@ async function welcome(email, env) {
 <p>Inside: a finance question every morning, <b>Desk Radar</b> every weekday evening (the unusual BSE filings of the day, each linked to its source), and one deep lesson a week.</p>
 <p>Every Sunday you'll get the Sunday Wrap by email. Start with the first lesson while you wait: <a href="${SITE}/#lesson-1">read a real P&amp;L</a>.</p>
 <p style="color:#666;font-size:13px;margin-top:32px">Public information only, never investment advice. <a href="${u}" style="color:#666">Unsubscribe</a>.</p></div>`;
-  await fetch('https://api.resend.com/emails', { method: 'POST', headers: { authorization: 'Bearer ' + env.RESEND_API_KEY, 'content-type': 'application/json' },
-    body: JSON.stringify({ from: env.MAIL_FROM || 'CAGR Club <club@cagrclub.com>', to: [email], subject: 'Your CAGR Club invite', html, headers: { 'List-Unsubscribe': '<' + u + '>', 'List-Unsubscribe-Post': 'List-Unsubscribe=One-Click' } }) });
+  await sendMail(env, email, 'Your CAGR Club invite', html, u);
 }
 const page = (msg) => new Response(`<!doctype html><meta name=viewport content="width=device-width"><title>CAGR Club</title><body style="font:17px/1.6 -apple-system,Segoe UI,sans-serif;background:#0b1410;color:#e8efe9;display:grid;place-items:center;min-height:100vh;margin:0;padding:16px"><div style="max-width:420px;text-align:center"><p>${msg}</p><p><a style="color:#7fd1a8" href="/">Back to cagrclub.com</a></p></div>`, { headers: { 'content-type': 'text/html; charset=utf-8', 'cache-control': 'no-store' } });
 

@@ -1,8 +1,8 @@
 // Sunday Wrap: a weekly email built from the week's BSE filings (Mon-Fri) and the week's lesson,
 // sent to everyone on the list with a one-click unsubscribe. No dependencies.
 // Usage: node scripts/sunday-wrap.js [--preview]
-// Secrets: RESEND_API_KEY, ADMIN_KEY (same value as the Worker secret), optional MAIL_FROM.
-// Without RESEND_API_KEY, or with --preview, it only writes wrap-preview.html.
+// Secrets: BREVO_API_KEY (free, 300 emails a day) or RESEND_API_KEY, plus ADMIN_KEY (same value as the Worker secret), optional MAIL_FROM.
+// Without an email key, or with --preview, it only writes wrap-preview.html.
 const fs = require('fs'), vm = require('vm'), path = require('path'), crypto = require('crypto');
 const { RULES, classify, fetchDay, pdf, clip } = require('./desk-radar.js');
 const SITE = 'https://cagrclub.com', DISCORD = 'https://discord.gg/qUfEwkCe';
@@ -74,24 +74,27 @@ async function subscribers(key) {
 async function main() {
   const w = await build();
   console.log('Filings:', w.total, '· flagged:', w.flagged, '·', w.subject);
-  const key = process.env.ADMIN_KEY, api = process.env.RESEND_API_KEY;
+  const key = process.env.ADMIN_KEY, brevo = process.env.BREVO_API_KEY, api = brevo || process.env.RESEND_API_KEY;
   if (process.argv.includes('--preview') || !api || !key) {
     fs.writeFileSync('wrap-preview.html', w.wrap('#'));
-    console.log('Preview written to wrap-preview.html' + (!api || !key ? ' (RESEND_API_KEY or ADMIN_KEY not set, nothing sent)' : ''));
+    console.log('Preview written to wrap-preview.html' + (!api || !key ? ' (no email key or ADMIN_KEY set, nothing sent)' : ''));
     return;
   }
   const list = await subscribers(key);
   console.log('Sending to', list.length, 'subscribers');
   const from = process.env.MAIL_FROM || 'CAGR Club <club@cagrclub.com>';
-  for (let i = 0; i < list.length; i += 100) {
-    const batch = list.slice(i, i + 100).map(e => {
-      const u = SITE + '/api/unsubscribe?e=' + encodeURIComponent(e) + '&t=' + token(e, key);
-      return { from, to: [e], subject: w.subject, html: w.wrap(u), headers: { 'List-Unsubscribe': '<' + u + '>', 'List-Unsubscribe-Post': 'List-Unsubscribe=One-Click' } };
-    });
-    const r = await fetch('https://api.resend.com/emails/batch', { method: 'POST', headers: { authorization: 'Bearer ' + api, 'content-type': 'application/json' }, body: JSON.stringify(batch) });
-    if (!r.ok) { console.error('Resend returned', r.status, await r.text()); process.exit(1); }
-    await new Promise(r => setTimeout(r, 600));
+  if (brevo && list.length > 290) console.warn('Brevo free plan sends 300 a day. Only the first 290 will get this week\'s wrap; upgrade or split the send.');
+  const m = from.match(/^(.*?)\s*<(.+)>$/) || [null, 'CAGR Club', from];
+  let sent = 0;
+  for (const e of (brevo ? list.slice(0, 290) : list)) {
+    const u = SITE + '/api/unsubscribe?e=' + encodeURIComponent(e) + '&t=' + token(e, key);
+    const headers = { 'List-Unsubscribe': '<' + u + '>', 'List-Unsubscribe-Post': 'List-Unsubscribe=One-Click' };
+    const r = brevo
+      ? await fetch('https://api.brevo.com/v3/smtp/email', { method: 'POST', headers: { 'api-key': brevo, 'content-type': 'application/json', accept: 'application/json' }, body: JSON.stringify({ sender: { name: m[1] || 'CAGR Club', email: m[2] }, to: [{ email: e }], subject: w.subject, htmlContent: w.wrap(u), headers }) })
+      : await fetch('https://api.resend.com/emails', { method: 'POST', headers: { authorization: 'Bearer ' + api, 'content-type': 'application/json' }, body: JSON.stringify({ from, to: [e], subject: w.subject, html: w.wrap(u), headers }) });
+    if (!r.ok) console.error('Send failed for one address:', r.status, (await r.text()).slice(0, 200)); else sent++;
+    await new Promise(r => setTimeout(r, 250));
   }
-  console.log('Sent.');
+  console.log('Sent', sent, 'of', list.length);
 }
 main().catch(e => { console.error(e); process.exit(1); });

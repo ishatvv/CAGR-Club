@@ -17,6 +17,7 @@ jobs:
         with: { node-version: 20 }
       - run: node scripts/sunday-wrap.js ${{ (github.event_name == 'workflow_dispatch' && inputs.preview) && '--preview' || '' }}
         env:
+          BREVO_API_KEY: ${{ secrets.BREVO_API_KEY }}
           RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
           ADMIN_KEY: ${{ secrets.ADMIN_KEY }}
           MAIL_FROM: ${{ secrets.MAIL_FROM }}
