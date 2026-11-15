@@ -1068,9 +1068,9 @@ body.modal-open{overflow:hidden}
 .fs-snap{font-size:13px}
 .fs-r span:not(:first-child){font-size:12px}
 @media (max-width:620px){.fs-h,.fs-r{grid-template-columns:minmax(0,1fr) 78px 78px}.fs-snap{font-size:12px}.fs-r span:not(:first-child){font-size:10.5px}.fl-ex{position:static}.fl-m{font-size:11px}}
-.fs-r.fb{font-weight:700;border-top:1px solid #bdb39d}
-.fs-r.fs{font-style:italic;color:#555}
-.fs-r.fi span:first-child{padding-left:14px;color:#555}
+.fs-r.frb{font-weight:700;border-top:1px solid #bdb39d}
+.fs-r.frs{font-style:italic;color:#555}
+.fs-r.fri span:first-child{padding-left:14px;color:#555}
 /* header: nav in normal flow so it can never cover search */
 .top .wrap{gap:10px}
 .top .spacer{display:none}
