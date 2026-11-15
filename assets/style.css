@@ -1078,3 +1078,16 @@ body.modal-open{overflow:hidden}
 @media (max-width:1560px){.find{width:auto!important;padding:0 12px!important}.find span{display:inline!important}.find kbd{display:inline!important}}
 @media (max-width:1320px){.nav a .i{display:none}.find{width:40px!important;padding:0!important;justify-content:center}.find span,.find kbd{display:none!important}}
 @media (max-width:1080px){.nav a{padding:8px 10px;font-size:13.5px}}
+/* folders: green-black scale (dark) / mint-to-jade scale (light) */
+:root[data-theme="dark"] .f-ver{--fc:#2B9D79;--fk:#EAF6F0}
+:root[data-theme="dark"] .f-cob{--fc:#1E7A5E;--fk:#E2F2EA}
+:root[data-theme="dark"] .f-och{--fc:#15523F;--fk:#D5EBE1}
+:root[data-theme="dark"] .f-ink{--fc:#0E2F25;--fk:#BFE0D2}
+:root[data-theme="light"] .f-ver{--fc:#2B9D79;--fk:#F4EFE3}
+:root[data-theme="light"] .f-cob{--fc:#5FB596;--fk:#0F2E25}
+:root[data-theme="light"] .f-och{--fc:#9FD3BD;--fk:#0F2E25}
+:root[data-theme="light"] .f-ink{--fc:#CFE8DD;--fk:#0F2E25}
+.f-back{background:color-mix(in srgb,var(--fc) 72%,#000)}
+:root[data-theme="light"] .f-back{background:color-mix(in srgb,var(--fc) 82%,#0F2E25)}
+.f-front{box-shadow:0 1px 0 rgba(255,255,255,.18) inset,0 0 0 1px rgba(255,255,255,.04)}
+:root[data-theme="dark"] .f-ink .f-front{box-shadow:0 0 0 1px #1F4A3C inset}
