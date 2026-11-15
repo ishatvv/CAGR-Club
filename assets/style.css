@@ -1031,3 +1031,50 @@ body.modal-open{overflow:hidden}
 .paper.lk .pp-k{color:var(--muted)}
 .worked{font-size:13.5px}
 @media (max-width:620px){.vid{grid-template-columns:minmax(0,1fr)}.lesson article p{font-size:16.5px}}
+/* real-filing explorer */
+.fl{display:flex;flex-direction:column;gap:16px}
+.fl-top{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap}
+.fl-top b{display:block;font-size:18px;letter-spacing:-.02em}
+.fl-top span{font:500 11.5px var(--mono);color:var(--faint);text-transform:uppercase;letter-spacing:.06em}
+.fl-tabs{display:flex;flex-wrap:wrap;gap:6px}
+.fl-t{display:inline-flex;align-items:center;gap:8px;padding:8px 13px;border-radius:999px;border:1px solid var(--line2);background:none;font-size:13.5px;font-weight:500;color:var(--muted);cursor:pointer;transition:all .2s}
+.fl-t i{font:500 11px var(--mono);font-style:normal;opacity:.7}
+.fl-t:hover{color:var(--ink);border-color:var(--ink)}
+.fl-t.on{background:var(--ink);border-color:var(--ink);color:var(--bg)}
+.fl-ex{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.1fr);gap:16px;padding:18px;border-radius:16px;background:var(--bg2);border:1px solid var(--line);animation:rise .35s var(--ease)}
+.fl-txt{display:flex;flex-direction:column;gap:10px}
+.fl-txt h4{margin:0;font-size:19px;font-weight:600;letter-spacing:-.02em}
+.fl-txt p{font-size:15px!important;line-height:1.6!important;color:var(--muted)}
+.fl-nav{display:flex;gap:8px;margin-top:auto}
+.fl-m{margin:0;font:12.5px/1.65 var(--mono);white-space:pre;overflow-x:auto;color:var(--ink);padding:14px;border-radius:12px;background:var(--surface);border:1px solid var(--line)}
+.fl-g{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;align-items:start}
+.fs-snap{border-radius:12px;background:#FBF8F1;color:#1b1b1b;border:1px solid #d9d1bf;overflow:hidden;font-size:12px;box-shadow:0 10px 30px -18px rgba(0,0,0,.5)}
+.fs-h{display:grid;grid-template-columns:minmax(0,1fr) 68px 68px;gap:6px;padding:10px 10px 8px;border-bottom:1.5px solid #1b1b1b;font-size:11px}
+.fs-h b{font-size:12px}
+.fs-h span{text-align:right;font:600 10.5px var(--mono);color:#555}
+.fs-r{display:grid;grid-template-columns:minmax(0,1fr) 68px 68px;gap:6px;padding:4px 10px;border-bottom:1px solid #ece5d4;transition:background .25s,color .25s}
+.fs-r span:not(:first-child){text-align:right;font:500 11px var(--mono);font-variant-numeric:tabular-nums}
+.fs-r.b{font-weight:700;border-top:1px solid #bdb39d}
+.fs-r.s{font-style:italic;color:#555}
+.fs-r.i span:first-child{padding-left:12px;color:#555}
+.fs-hd{display:block;font:600 10px var(--mono);text-transform:uppercase;letter-spacing:.08em;color:#777;background:#f3eee2}
+.fs-r.hl{background:#ffe9a6;color:#000}
+.fs-r.hl span:first-child{box-shadow:inset 3px 0 0 #E4572E;padding-left:8px}
+@media (max-width:1100px){.fl-g{grid-template-columns:minmax(0,1fr)}.fl-ex{grid-template-columns:minmax(0,1fr)}}
+.fl-g{grid-template-columns:minmax(0,1fr)!important;gap:14px}
+.fl-ex{grid-template-columns:minmax(0,1fr)!important;position:sticky;top:calc(80px + env(safe-area-inset-top,0px));z-index:3;box-shadow:0 18px 40px -24px rgba(0,0,0,.45)}
+.fl-nav{margin-top:4px}
+.fs-h,.fs-r{grid-template-columns:minmax(0,1fr) 110px 110px}
+.fs-snap{font-size:13px}
+.fs-r span:not(:first-child){font-size:12px}
+@media (max-width:620px){.fs-h,.fs-r{grid-template-columns:minmax(0,1fr) 78px 78px}.fs-snap{font-size:12px}.fs-r span:not(:first-child){font-size:10.5px}.fl-ex{position:static}.fl-m{font-size:11px}}
+.fs-r.fb{font-weight:700;border-top:1px solid #bdb39d}
+.fs-r.fs{font-style:italic;color:#555}
+.fs-r.fi span:first-child{padding-left:14px;color:#555}
+/* header: nav in normal flow so it can never cover search */
+.top .wrap{gap:10px}
+.top .spacer{display:none}
+.nav{position:static!important;transform:none!important;margin:0 auto!important;flex:0 1 auto;min-width:0}
+@media (max-width:1560px){.find{width:auto!important;padding:0 12px!important}.find span{display:inline!important}.find kbd{display:inline!important}}
+@media (max-width:1320px){.nav a .i{display:none}.find{width:40px!important;padding:0!important;justify-content:center}.find span,.find kbd{display:none!important}}
+@media (max-width:1080px){.nav a{padding:8px 10px;font-size:13.5px}}

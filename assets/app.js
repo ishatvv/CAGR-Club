@@ -131,7 +131,16 @@ function mountDrill(el){var score=0,asked=0,left=0,h=null,cur=null,lock=false;
   el.addEventListener('click',function(e){var b=e.target.closest('[data-mo]');if(b)pick(+b.dataset.mo)});
   document.addEventListener('keydown',function kd(e){if(!document.body.contains(el)){document.removeEventListener('keydown',kd);return}if(!h)return;var k='1234'.indexOf(e.key);if(k>-1&&e.target.tagName!=='INPUT'){e.preventDefault();e.stopImmediatePropagation();pick(k)}},true);
   $('m-go').addEventListener('click',function(){score=0;asked=0;left=60;$('m-go').textContent='Restart';clearInterval(h);h=every(1000,function(){if(!$('m-s')){clearInterval(h);return}left--;draw();if(left<=0)end()});draw();next()})}
-var MOUNT={priced:mountPriced,cagr:mountCagr,dcf:mountDcf,pnl:mountPnl};
+function mountFiling(el){var fi=0;
+  function f(n){if(n===null||n===undefined)return '';if(n===0)return '—';var a=Math.abs(n).toLocaleString('en-IN',{minimumFractionDigits:2,maximumFractionDigits:2});return n<0?'('+a+')':a}
+  function tbl(title,rows){return '<div class="fs-snap"><div class="fs-h"><b>'+title+'</b><span>FY25</span><span>FY24</span></div>'+rows.map(function(r){var c=({b:'fb',s:'fs',i:'fi'})[r[4]]||r[4]||'';if(c==='h')return '<div class="fs-r fs-hd">'+r[1]+'</div>';return '<div class="fs-r '+c+'" data-fr="'+r[0]+'"><span>'+r[1].trim()+'</span><span>'+f(r[2])+'</span><span>'+f(r[3])+'</span></div>'}).join('')+'</div>'}
+  el.innerHTML='<div class="fl"><div class="fl-top"><div><b>'+AP.name+'</b><span>'+AP.period+'</span></div><a class="link" href="'+AP.src+'" target="_blank" rel="noopener">Open the filing'+ico('ext')+'</a></div><div class="fl-tabs">'+AP.flows.map(function(x,k){return '<button type="button" class="fl-t" data-fl="'+k+'"><i>'+(k+1)+'</i>'+x.t+'</button>'}).join('')+'</div><div class="fl-ex" id="fl-ex"></div><div class="fl-g">'+tbl('Statement of profit and loss',AP.pl)+tbl('Balance sheet (31 March)',AP.bs)+tbl('Statement of cash flows',AP.cf)+'</div><p class="cap">Figures as filed, in ₹ crore; negatives in brackets. Lines marked * are subtotals computed from the filed lines. Some smaller balance sheet lines are left out, so the columns shown do not add to the totals.</p></div>';
+  function show(k){fi=k;var x=AP.flows[k];$$('.fl-t',el).forEach(function(b,i){b.classList.toggle('on',i===k)});$$('[data-fr]',el).forEach(function(r){r.classList.toggle('hl',x.ids.indexOf(r.dataset.fr)>-1)});
+    el.querySelector('#fl-ex').innerHTML='<div class="fl-txt"><h4>'+x.t+'</h4><p>'+x.h+'</p><div class="fl-nav"><button type="button" class="btn ghost sm" data-fln="-1"'+(k===0?' disabled':'')+'>'+ico('left')+'Previous</button><button type="button" class="btn pri sm" data-fln="1"'+(k===AP.flows.length-1?' disabled':'')+'>Next link'+ico('arrow')+'</button></div></div><pre class="fl-m">'+x.m+'</pre>';
+    var first=el.querySelector('.fs-r.hl');}
+  el.addEventListener('click',function(e){var b=e.target.closest('[data-fl]');if(b){show(+b.dataset.fl);return}b=e.target.closest('[data-fln]');if(b){var n=fi+(+b.dataset.fln);if(AP.flows[n])show(n)}});
+  show(0)}
+var MOUNT={filing:mountFiling,priced:mountPriced,cagr:mountCagr,dcf:mountDcf,pnl:mountPnl};
 
 /* ---------- archive folders ---------- */
 var FOLD=[{c:'ver',a:'ledger',ts:'serif'},{c:'cob',a:'rings',ts:'italic'},{c:'och',a:'dots',ts:'serif'},{c:'ink',a:'waves',ts:'italic'}];
