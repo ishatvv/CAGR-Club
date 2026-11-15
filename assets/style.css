@@ -999,3 +999,11 @@ body.modal-open{overflow:hidden}
 .qv-tabs i::before{background:var(--surface)!important;border:1.3px solid var(--ink);border-bottom:0;top:-9px!important;left:-1.3px!important}
 @media (max-width:1560px){.find{width:40px;padding:0;justify-content:center}.find span,.find kbd{display:none}}
 .stamp-slop{white-space:nowrap;font-size:46px;right:4%}@media (max-width:620px){.stamp-slop{font-size:32px}}
+.m-opts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.m-opt{display:flex;align-items:center;gap:12px;text-align:left;padding:13px 14px;border-radius:12px;border:1px solid var(--line2);background:var(--bg2);cursor:pointer;font-size:15px;font-weight:500;transition:border-color .2s,transform .2s,background .2s}
+.m-opt b{flex:none;width:24px;height:24px;border-radius:7px;display:grid;place-items:center;font:500 12px var(--mono);border:1px solid var(--line2);color:var(--muted)}
+.m-opt:hover{border-color:var(--ink);transform:translateY(-1px)}
+.m-opt.right{border-color:var(--pos);background:var(--pos-soft)}
+.m-opt.wrong{border-color:var(--neg);background:var(--neg-soft)}
+.drill .big{font-size:clamp(20px,2.2vw,28px);font-weight:500;letter-spacing:-.02em;line-height:1.35;min-height:2.7em}
+@media (max-width:620px){.m-opts{grid-template-columns:minmax(0,1fr)}}
