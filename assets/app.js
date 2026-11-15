@@ -34,7 +34,7 @@ var DAY=Math.floor(Date.now()/864e5),BASE=Math.floor(Date.UTC(2026,10,14)/864e5)
 function daySet(d){var t=[(d*7)%QS.length,(d*7+13)%QS.length,(d*7+29)%QS.length];if(t[1]===t[0])t[1]=(t[1]+1)%QS.length;if(t[2]===t[0]||t[2]===t[1])t[2]=(t[2]+2)%QS.length;return t}
 var todays=daySet(DAY);
 var PTS={Easy:1,Medium:2,Hard:3};
-var NAV=[['guess','Guess the stock','target'],['roadmap','Curriculum','map'],['practice','Practice','target'],['daily','Daily','cal'],['flaw','Flaw or fine','flag'],['library','Library','book']];
+var NAV=[['roadmap','Curriculum','map'],['practice','Practice','target'],['guess','Guess the stock','spark'],['library','Library','book']];
 var PRICED_LESSON=Math.max(1,LESSONS.findIndex?LESSONS.findIndex(function(l){return l.w==='priced'})+1:13);
 
 /* ---------- smooth scroll ---------- */
@@ -54,7 +54,7 @@ function modDone(m){return m.l.filter(function(n){return done[n]}).length}
 function nextLesson(){for(var i=1;i<=LESSONS.length;i++)if(!done[i])return i;return 1}
 function modOf(n){for(var i=0;i<MODULES.length;i++)if(MODULES[i].l.indexOf(n)>-1)return i;return 0}
 function streakNow(){var s=store.get('streak',{last:-1,n:0});return (s.last===DAY||s.last===DAY-1)?s.n:0}
-function syncStreak(){if(todays.every(function(i){return ans[i]})){var s=store.get('streak',{last:-1,n:0});if(s.last!==DAY)store.set('streak',{last:DAY,n:s.last===DAY-1?s.n+1:1})}$('streak').innerHTML=ico('flame')+streakNow()}
+function syncStreak(){if(todays.every(function(i){return ans[i]})){var s=store.get('streak',{last:-1,n:0});if(s.last!==DAY)store.set('streak',{last:DAY,n:s.last===DAY-1?s.n+1:1})}var sn=streakNow(),se=$('streak');se.innerHTML=ico('flame')+sn;se.hidden=!sn}
 function dailyNo(){return Math.max(1,DAY-BASE+1)}
 function untilNext(){var ms=(DAY+1)*864e5-Date.now();return pad2(Math.floor(ms/36e5))+':'+pad2(Math.floor(ms%36e5/6e4))+':'+pad2(Math.floor(ms%6e4/1e3))}
 function rng(seed){return function(){seed|=0;seed=seed+0x6D2B79F5|0;var t=Math.imul(seed^seed>>>15,1|seed);t=t+Math.imul(t^t>>>7,61|t)^t;return ((t^t>>>14)>>>0)/4294967296}}
@@ -348,9 +348,9 @@ function pxDesk(){var list=pxList();
   return '<div class="desk-in '+(a?(a.ok?'ok':'no'):'')+(px.dir<0?' back':'')+'"><div class="desk-top"><span class="qnum">'+pad2(i+1)+'</span><div class="tags"><span class="tag">'+q.t+'</span><span class="tag d-'+q.d+'">'+q.d+' · '+PTS[q.d]+' pt'+(PTS[q.d]>1?'s':'')+'</span>'+(a?'<span class="tag '+(a.ok?'t-ok':'t-no')+'">'+(a.ok?'Correct':'Missed')+'</span>':'')+'</div></div>'+
   '<div class="desk-body">'+qBody(i)+'</div><div class="desk-f"><button class="btn ghost sm" type="button" data-pxnav="-1"'+(pos<=0?' disabled':'')+'>'+ico('left')+'Prev</button><span class="kh mono-s">'+(q.type==='mcq'?'A–D TO PICK':'ENTER TO CHECK')+' · ← → TO MOVE</span><button class="btn '+(a?'pri':'ghost')+' sm" type="button" data-pxnav="1"'+(pos>=list.length-1?' disabled':'')+'>'+(a?'Next':'Skip')+ico('arrow')+'</button></div></div>'}
 function pxDots(){var list=pxList();return list.map(function(i){var a=ans[i];return '<button type="button" class="qd '+(a?(a.ok?'ok':'no'):'')+(i===px.cur?' cur':'')+'" data-pxgo="'+i+'" title="Q'+(i+1)+' · '+esc(QS[i].t)+'"></button>'}).join('')}
-R.practice=function(){return '<section class="px"><div class="px-head"><h1>Reps, <em>not reading.</em></h1><p class="lede">One question at a time, each with one exact answer and the full working. Pick an answer before you peek. That is the habit AI cannot build for you.</p></div><div class="pstats" id="pstats">'+pxStats()+'</div>'+
+R.practice=function(){return R.daily().replace('<section class="sec">','<section class="sec" id="today">')+flawBand()+'<section class="px"><div class="px-head"><h1>Reps, <em>not reading.</em></h1><p class="lede">One question at a time, each with one exact answer and the full working. Pick an answer before you peek. That is the habit AI cannot build for you.</p></div><div class="pstats" id="pstats">'+pxStats()+'</div>'+
   '<div class="px-g"><aside class="px-side" id="pside">'+pxSide()+'</aside><div class="px-main"><div class="desk" id="desk">'+pxDesk()+'</div><div class="qdots" id="qdots">'+pxDots()+'</div></div></div></section><section class="card pad" id="drill"></section><div class="row" style="justify-content:flex-end"><button class="link" type="button" id="q-reset">Reset my answers</button></div>'};
-A.practice=function(){mountDrill($('drill'));$('q-reset').addEventListener('click',function(){ans={};store.set('ans',ans);pxRefresh(true);syncStreak();toast('Answers cleared')})};
+A.practice=function(){A.daily();mountDrill($('drill'));$('q-reset').addEventListener('click',function(){ans={};store.set('ans',ans);pxRefresh(true);syncStreak();toast('Answers cleared')})};
 function pxRefresh(all){if(!$('desk'))return;$('desk').innerHTML=pxDesk();$('qdots').innerHTML=pxDots();if(all!==false){$('pstats').innerHTML=pxStats();$('pside').innerHTML=pxSide()}}
 function pxMove(d){var list=pxList(),p=list.indexOf(px.cur)+d;if(list[p]==null)return;px.cur=list[p];px.dir=d;pxRefresh(false);var f=$('desk').querySelector('input:not([disabled])');if(f&&FINE)f.focus()}
 onAnswered.push(function(i){if($('desk')&&px.cur===i)pxRefresh(true)});
@@ -370,6 +370,7 @@ function bindShare(){var b=$('d-share');if(b)b.addEventListener('click',function
 onAnswered.push(function(i){var el=$('pl-'+i);if(!el)return;var k=todays.indexOf(i),tmp=document.createElement('div');tmp.innerHTML=placard(i,k);var nw=tmp.firstChild;nw.classList.remove('on');el.replaceWith(nw);void nw.offsetWidth;requestAnimationFrame(function(){requestAnimationFrame(function(){nw.classList.add('on')})});
   if(todays.every(function(x){return ans[x]})){setTimeout(function(){if(!$('sc-slot'))return;$('sc-slot').innerHTML=scoreCard();bindShare();var s=$('scorecard');if(s){scrollToEl(s,140);var r=s.getBoundingClientRect();confetti(r.left+r.width/2,r.top+40)}},900)}});
 
+function flawBand(){return '<a class="card flaw-band" href="#flaw"><div><span class="mono-s">GAME</span><h3>Flaw or fine?</h3><p>'+FLAWS.length+' forecasts. Swipe away the ones the business could never deliver.</p></div><span class="btn ghost sm">Play'+ico('arrow')+'</span></a>'}
 /* ---------- flaw or fine ---------- */
 var fz={i:0,right:0,res:[]};
 R.flaw=function(){return '<section class="flaw-page">'+mono('GAME',FLAWS.length+' CASES')+'<div class="sec" style="gap:14px;max-width:660px;align-items:center;text-align:center"><h1 class="big-serif">Flaw <em>or fine?</em></h1><p class="lede">A forecast lands on your desk. Could the business really do this? Drag the card left for flaw or right for fine, or use the buttons or arrow keys.</p></div><div class="fz-score" id="fz-score"></div><div class="deck" id="deck"></div><div class="fz-btns"><button class="fz-b no" type="button" id="fz-no">'+ico('x')+'Flaw</button><button class="fz-b yes" type="button" id="fz-yes">'+ico('check')+'Fine</button></div><div id="fz-res" class="fz-res"></div></section>'};
@@ -415,7 +416,7 @@ function renderFoot(){var me=store.get('nl',null);$('foot').innerHTML='<div clas
 document.querySelector('.logo').innerHTML=logoMark()+'<span class="wm">CAGR<i>club</i></span>';
 renderFoot();$('bgmk').innerHTML=monkey('mk-bgm',true);
 $('nav').innerHTML=NAV.map(function(n){return '<a href="#'+n[0]+'" data-nav="'+n[0]+'">'+ico(n[2])+n[1]+'</a>'}).join('');
-$('tabs').innerHTML=[['home','Home','home']].concat(NAV.slice(0,4)).map(function(n){return '<a href="#'+n[0]+'" data-nav="'+n[0]+'">'+ico(n[2])+n[1].replace('Flaw or fine','Flaw').replace('Guess the stock','Guess')+'</a>'}).join('');
+$('tabs').innerHTML=[['home','Home','home']].concat(NAV.slice(0,4)).map(function(n){return '<a href="#'+n[0]+'" data-nav="'+n[0]+'">'+ico(n[2])+n[1].replace('Guess the stock','Guess')+'</a>'}).join('');
 $('find').innerHTML=ico('search')+'<span>Search</span><kbd>'+(/Mac|iPhone|iPad/.test(navigator.platform||'')?'⌘K':'Ctrl K')+'</kbd>';
 $('totop').innerHTML='<svg class="tt-ring" viewBox="0 0 60 60"><circle cx="30" cy="30" r="27"/><circle id="tt-p" cx="30" cy="30" r="27" stroke-dasharray="169.6" stroke-dashoffset="169.6" transform="rotate(-90 30 30)"/></svg>'+ico('up');
 $('totop').addEventListener('click',function(){if(lenis)lenis.scrollTo(0);else window.scrollTo({top:0,behavior:RM?'auto':'smooth'})});
@@ -433,7 +434,7 @@ if(FINE&&!RM){var cur=$('cur'),cx=-100,cy=-100,tx=-100,ty=-100;document.body.cla
 
 function parse(){var h=(location.hash||'').replace('#',''),m;
   if((m=h.match(/^lesson-(\d+)$/)))return ['lesson',m[1]];if((m=h.match(/^roadmap-(\d+)$/)))return ['roadmap',m[1]];
-  if(/^road-|^roadmaps$/.test(h))return ['roadmap'];if(h==='questions')return ['practice'];if(h==='tools')return ['flaw'];if(h==='glossary')return ['library'];
+  if(/^road-|^roadmaps$/.test(h))return ['roadmap'];if(h==='questions'||h==='daily')return ['practice'];if(h==='tools')return ['flaw'];if(h==='glossary')return ['library'];
   if(h==='join'||h==='signup'||h==='community'||h==='wrap')return ['home','signup'];
   return [R[h]&&h!=='lesson'?h:'home']}
 var TITLES={home:'CAGR Club',guess:'Guess the stock',roadmap:'Curriculum',practice:'Practice',daily:'Daily',flaw:'Flaw or fine',library:'Glossary',reading:'Reading list',memos:'Memos'};
@@ -442,7 +443,7 @@ function go(){var p=parse(),name=p[0],v=$('view');
   if(name==='home'&&p[1]&&lastView==='home'&&$(p[1])){scrollToEl($(p[1]),80);return}
   clearTimers();showClear();lastView=name;document.body.dataset.view=name;cancelAnimationFrame(asc.raf);
   v.innerHTML=R[name](p[1]);
-  var key=name==='lesson'?'roadmap':(name==='reading'||name==='memos')?'library':name;
+  var key=name==='lesson'?'roadmap':(name==='reading'||name==='memos')?'library':name==='flaw'?'practice':name;
   $$('[data-nav]').forEach(function(a){a.classList.toggle('on',a.dataset.nav===key)});
   var jt=$('join-top');if(jt){jt.href=inviteHref();if(DISCORD_INVITE){jt.target='_blank';jt.rel='noopener'}}
   document.title=name==='lesson'?LESSONS[+p[1]-1].t+' · CAGR Club':name==='home'?'CAGR Club':TITLES[name]+' · CAGR Club';
@@ -545,8 +546,8 @@ function mountGuess(el,daily){if(!el)return;var g;
     if(t.hasAttribute('data-endless')&&el.id==='gt-main'){e.preventDefault();g=gtsNew(false,g.i);render();return}
     if(t.hasAttribute('data-share')){var txt=gtsShare(g);try{navigator.clipboard.writeText(txt).then(function(){toast('Result copied. Paste it anywhere.')},function(){toast(txt)})}catch(x){toast(txt)}}};
   render()}
-function gtsHome(){return '<section class="exp gts-home" id="guess-home"><div class="sec-h" data-rv><div><h2>Guess the stock. <span class="dim">Four clues, one company.</span></h2><p class="lede">Real FY25 numbers from Indian listed companies. Sector, size, valuation, then one tell. The fewer clues you need, the more you score. A new company every morning.</p></div><a class="btn ghost sm" href="#guess">Play endless'+ico('arrow')+'</a></div><div class="mg card gt" id="gt-home" data-rv></div></section>'}
-R.guess=function(){return '<section class="flaw-page gt-page"><div class="sec" style="gap:14px;max-width:660px;align-items:center;text-align:center"><h1 class="big-serif">Guess <em>the stock.</em></h1><p class="lede">Four clues from one Indian listed company: its sector, its size, its valuation and one tell. Name it in as few clues as you can. One daily company for your streak, then play as many as you like.</p></div><div class="mg card gt" id="gt-main"></div><p class="small gt-src">Figures are FY25 (year to March 2025), rounded, from company results. P/E bands are approximate and move with the share price. A game, not a recommendation.</p></section>'};
+function gtsHome(){return '<section class="exp gts-home" id="guess-home"><div class="sec-h" data-rv><div><h2>Guess the stock. <span class="dim">Four clues, one company.</span></h2><p class="lede">Real FY25 numbers from Indian listed companies. Valuation first, then size, then industry, then one tell. The fewer clues you need, the more you score. A new company every morning.</p></div><a class="btn ghost sm" href="#guess">Play endless'+ico('arrow')+'</a></div><div class="mg card gt" id="gt-home" data-rv></div></section>'}
+R.guess=function(){return '<section class="flaw-page gt-page"><div class="sec" style="gap:14px;max-width:660px;align-items:center;text-align:center"><h1 class="big-serif">Guess <em>the stock.</em></h1><p class="lede">Four clues from one Indian listed company: its valuation, its size, its industry and finally one tell. Name it in as few clues as you can. One daily company for your streak, then play as many as you like.</p></div><div class="mg card gt" id="gt-main"></div><p class="small gt-src">Figures are FY25 (year to March 2025), rounded, from company results. P/E bands are approximate and move with the share price. A game, not a recommendation.</p></section>'};
 A.guess=function(){mountGuess($('gt-main'),true)};
 
 document.body.classList.add('ready');go();

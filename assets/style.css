@@ -1119,3 +1119,15 @@ body.modal-open{overflow:hidden}
 .qv-gts .gq{font:500 11px var(--mono);padding:5px 9px;border-radius:999px;background:var(--bg2);border:1px solid var(--line);color:var(--ink);transition:transform .4s var(--ease)}
 .qv-gts .gq-n{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;background:var(--acc);color:var(--bg);font-size:18px}
 .qc:hover .qv-gts .gq:first-child{transform:translateY(-4px) rotate(-3deg)}.qc:hover .qv-gts .gq:nth-child(2){transform:translateY(3px) rotate(2deg)}
+.flaw-band{display:flex;align-items:center;justify-content:space-between;gap:20px;padding:24px 28px;margin:8px 0 40px;text-decoration:none;color:inherit;transition:transform .3s var(--ease),border-color .3s}
+.flaw-band:hover{transform:translateY(-2px);border-color:var(--acc)}
+.flaw-band h3{margin:4px 0 4px;font-size:22px;letter-spacing:-.02em}.flaw-band p{margin:0;color:var(--mute)}
+@media (max-width:560px){.flaw-band{flex-direction:column;align-items:flex-start}}
+/* lighter nav */
+.nav{background:none;border:0;backdrop-filter:none;-webkit-backdrop-filter:none;padding:0;gap:4px}
+.nav a{padding:8px 12px;font-size:14.5px;color:var(--muted);background:none!important}
+.nav a .i{display:none}
+.nav a::after{display:block;content:"";position:absolute;left:50%;bottom:-2px;width:4px;height:4px;margin-left:-2px;border-radius:50%;background:var(--acc);transform:scale(0);transition:transform .3s var(--ease)}
+.nav a.on{color:var(--ink)!important}
+.nav a.on::after{transform:scale(1)}
+.nav a:hover{color:var(--ink)}

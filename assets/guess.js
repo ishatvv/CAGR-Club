@@ -19,5 +19,5 @@ var STOCKS=[
  {n:'Nykaa (FSN E-Commerce)',s:'Internet · beauty retail',rev:'about ₹7,950 cr',pat:'under ₹100 cr',m:'about 1%',pe:'Above 500×',tell:'An online beauty store started in 2012 by a former investment banker.',why:'Revenue near ₹8,000 crore and profit under ₹100 crore. A P/E this high is a bet on what margins will be, not what they are.',near:'Eternal (Zomato)'},
  {n:'Trent',s:'Retail · fashion',rev:'about ₹17,000 cr',pat:'about ₹1,500 cr',m:'9%',pe:'80–110×',tell:'A Tata retailer whose low-price fashion chain Zudio opened hundreds of stores in a few years.',why:'Fashion retail rarely earns 9%. Growth of 30–40% a year is what the high P/E is paying for.',near:'Avenue Supermarts (DMart)'}
 ];
-var GCLUES=[['Sector',function(s){return s.s}],['Size',function(s){return (/^(Loans|Deposits)/.test(s.rev)?'':'Revenue ')+s.rev+' · Net profit '+s.pat+(/comparable/.test(s.m)?'':' · Margin '+s.m)}],['Valuation',function(s){return 'P/E band '+s.pe}],['The tell',function(s){return s.tell}]];
+var GCLUES=[['Valuation',function(s){return 'P/E band '+s.pe+(/comparable/.test(s.m)?'':' · Net margin '+s.m)}],['Size',function(s){return (/^(Loans|Deposits)/.test(s.rev)?'':'Revenue ')+s.rev+' · Net profit '+s.pat}],['Industry',function(s){return s.s}],['The tell',function(s){return s.tell}]];
 var GTS_PLAYABLE=STOCKS.filter(function(s){return s.n!=='Trent'});
