@@ -23,8 +23,8 @@ const RULES = [
     sub: /Resignation of Director|Resignation of Company Secretary|Cessation|Change in Management/i, head: /resign|cessation/i }
 ];
 
-async function page(p) {
-  const u = 'https://api.bseindia.com/BseIndiaAPI/api/AnnSubCategoryGetData/w?pageno=' + p + '&strCat=-1&strPrevDate=' + DATE + '&strScrip=&strSearch=P&strToDate=' + DATE + '&strType=C&subcategory=-1';
+async function page(p, d = DATE) {
+  const u = 'https://api.bseindia.com/BseIndiaAPI/api/AnnSubCategoryGetData/w?pageno=' + p + '&strCat=-1&strPrevDate=' + d + '&strScrip=&strSearch=P&strToDate=' + d + '&strType=C&subcategory=-1';
   const r = await fetch(u, { headers: H });
   if (!r.ok) { if (p === 1) throw new Error('BSE returned ' + r.status); return null; }
   const j = await r.json();
@@ -46,9 +46,14 @@ function classify(a) {
 const clip = (s, n) => (s = String(s || '').replace(/\s+/g, ' ').trim()).length > n ? s.slice(0, n - 1) + '…' : s;
 const pdf = a => a.ATTACHMENTNAME ? 'https://www.bseindia.com/xml-data/corpfiling/AttachLive/' + a.ATTACHMENTNAME : (a.NSURL || 'https://www.bseindia.com/corporates/ann.html');
 
-async function main() {
+async function fetchDay(d = DATE) {
   let all = [];
-  for (let p = 1; p <= 80; p++) { const t = await page(p); if (!t) break; all = all.concat(t); if (t.length < 50) break; await new Promise(r => setTimeout(r, 400)); }
+  for (let p = 1; p <= 80; p++) { const t = await page(p, d); if (!t) break; all = all.concat(t); if (t.length < 50) break; await new Promise(r => setTimeout(r, 400)); }
+  return all;
+}
+
+async function main() {
+  const all = await fetchDay();
   const seen = new Set(), groups = {};
   for (const a of all) {
     const k = classify(a); if (!k) continue;
@@ -76,4 +81,5 @@ async function main() {
     if (!r.ok) { console.error('Discord returned', r.status, await r.text()); process.exit(1); }
   }
 }
-main().catch(e => { console.error(e); process.exit(1); });
+module.exports = { RULES, classify, fetchDay, pdf, clip };
+if (require.main === module) main().catch(e => { console.error(e); process.exit(1); });
