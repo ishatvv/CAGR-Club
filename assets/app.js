@@ -155,7 +155,7 @@ var AILEN=AISEG.reduce(function(s,x){return s+x[0].length},0);
 var NEED=65000*Math.pow(1.12,5)/12*10/1200;
 function aiHtml(nc,hit){var out='',left=nc;AISEG.forEach(function(sg){if(left<=0)return;var t=sg[0].slice(0,left);left-=sg[0].length;out+=sg[1]?'<span class="cl'+(hit>=sg[1]?' hit':'')+'" data-n="'+sg[1]+'">'+esc(t)+(hit>=sg[1]?'<sup>'+sg[1]+'</sup>':'')+'</span>':esc(t)});return out+(nc<AILEN?'<span class="caret"></span>':'')}
 function storyHtml(){
-  return '<section class="story" id="story"><div class="story-pin"><h2>AI writes the report. <em>You need to know if it’s true.</em></h2>'+
+  return '<section class="story" id="story"><div class="story-pin"><h2 class="rv-h" id="rv-h">'+revealWords('Next, learn to check the answer.')+'<svg class="tailsvg" viewBox="0 0 260 120" aria-hidden="true"><path id="tail" pathLength="1" d="M4 112C70 110 120 96 160 70C196 46 214 20 236 22C254 24 256 48 238 54C222 60 214 44 226 38"/></svg></h2>'+
   '<div class="story-g"><div class="st-cap"><p class="sc on" data-s="0"><b>01</b>Ask a chatbot if CementCo is a buy at 30× earnings. It sounds like an analyst.</p><p class="sc" data-s="1"><b>02</b>Read it like one. Every line is either unfalsifiable or wrong.</p><p class="sc" data-s="2"><b>03</b>Now do the arithmetic. That is what we teach, and what AI skips.</p></div>'+
   '<div class="st-stage"><div class="chat" id="st-chat"><div class="chat-q"><span>You</span>Is CementCo a buy at 30× earnings?</div><div class="chat-a"><span class="chat-who">'+ico('spark')+'Chatbot</span><p id="st-ai">'+aiHtml(AILEN,0)+'</p><div class="notes" id="st-notes">'+NOTES.map(function(n,k){return '<p class="note" data-k="'+(k+1)+'"><b>'+(k+1)+'</b>'+n+'</p>'}).join('')+'</div><span class="stamp-slop">SLOP</span></div></div>'+
   '<div class="analyst" id="st-an"><div class="an-h">'+monkey('mk-xs')+'<div><b>The analyst’s version</b><span class="mono-s">CementCo · price check</span></div></div><p>At ₹65,000 crore, earning 12% a year means CementCo must sell <b>about '+Math.round(NEED)+' million tonnes</b> in year five. Its plants, including announced ones, make <b>40.5</b>.</p><div class="an-bars"><div><span>Price needs</span><i style="--w:100%"></i><b>'+NEED.toFixed(1)+' mt</b></div><div><span>Plants make</span><i class="ok" style="--w:'+(40.5/NEED*100).toFixed(1)+'%"></i><b>40.5 mt</b></div></div><p class="an-v"><b>Verdict:</b> the price assumes plants nobody has announced. Pass until the capex is.</p><a class="link" href="#lesson-'+PRICED_LESSON+'">Run this check yourself'+ico('arrow')+'</a></div></div></div></div></section>'}
@@ -172,25 +172,79 @@ function showClear(){}
 
 /* ---------- views ---------- */
 var R={},A={};
-R.home=function(){var answered=Object.keys(ans).length;
-  return '<section class="hero3"><canvas class="candles" id="candles" aria-hidden="true"></canvas><h1 class="split">'+splitWords([['Finance, learned',0]])+' <em class="scrib"><span class="w"><span style="--i:2">for real.</span></span><svg viewBox="0 0 300 30" preserveAspectRatio="none" aria-hidden="true"><path d="M4 20C60 8 140 6 296 14M30 26C110 18 200 18 270 22"/></svg></em></h1>'+
-  '<div class="hero3-f"><p class="lede">Accounting, valuation, markets and sectors, taught in depth and practised every day. From your first balance sheet to the final-round interview.</p><div class="row">'+joinBtn('xl')+'<a class="btn ghost xl mag" href="#roadmap">Start learning'+ico('arrow')+'</a></div></div>'+
-  '<div class="hcards">'+[['#roadmap','map','Curriculum',MODULES.length+' archives · '+LESSONS.length+' lessons'],['#practice','target','Practice',QS.length+' exact-answer questions'],['#daily','cal','Daily three','New every morning'],['#flaw','flag','Flaw or fine',FLAWS.length+' forecast cases'],['#library','book','Library',GLOSSARY.length+' terms · reading list']].map(function(c,k){return '<a class="hc tilt" href="'+c[0]+'" data-rv style="--d:'+(k*70)+'ms">'+ico(c[1])+'<b>'+c[2]+'</b><small>'+c[3]+'</small></a>'}).join('')+'</div>'+creds()+'</section>'+
-  storyHtml()+
-  '<section class="sec"><div class="sec-h" data-rv><div><h2>Finance is vast. <em>So we put it in order.</em></h2></div><a class="btn ghost mag" href="#roadmap">See every lesson'+ico('arrow')+'</a></div>'+folders()+'</section>'+
-  '<section class="sec"><div class="sec-h" data-rv><div><h2>Then practise <em>until it’s instinct.</em></h2></div></div><div class="trio">'+
-   '<a class="card tc tilt" href="#daily" data-rv><h3>Today’s three</h3><p>Three questions, same for everyone, new every morning.</p><div class="mini-placards">'+todays.map(function(i,k){var a=ans[i];return '<div class="mp '+(a?(a.ok?'ok':'no'):'')+'"><b>'+(a?(a.ok?ico('check'):ico('x')):k+1)+'</b><small>'+QS[i].t+'</small></div>'}).join('')+'</div><span class="link">Play'+ico('arrow')+'</span></a>'+
-   '<a class="card tc tilt" href="#practice" data-rv style="--d:90ms"><h3>The question bank</h3><p>Exact answers and full working. Watch the board fill in.</p><div class="mini-heat">'+QS.map(function(q,i){var a=ans[i];return '<i class="'+(a?(a.ok?'ok':'no'):'')+'"></i>'}).join('')+'</div><span class="link">Practise'+ico('arrow')+'</span></a>'+
-   '<a class="card tc tilt" href="#flaw" data-rv style="--d:180ms"><h3>Flaw or fine?</h3><p>A forecast lands on your desk. Could the business really do it?</p><div class="mini-fz"><span class="no">'+ico('x')+'Flaw</span><span class="yes">'+ico('check')+'Fine</span></div><span class="link">Play'+ico('arrow')+'</span></a></div></section>'+
-  nlHtml()+
-  '<section class="sec faq-s"><div class="sec-h" data-rv><div><h2>Before you <em>join.</em></h2></div></div><div class="faq">'+[['Is it free?','Yes. The lessons, practice, games and the Sunday Wrap are all free.'],['Who is behind it?','Practitioners, including CFA® charterholders and FRM® holders. Every lesson is checked against filings and textbooks, not generated.'],['Why not just use AI?','Use it. But it is confident and wrong in exactly the places that cost money: capacity, cash conversion, what is already in the price. Here you learn to check it.'],['Is any of this investment advice?','No. Companies in examples are invented, and nothing here recommends buying or selling a security.']].map(function(f){return '<details data-rv><summary>'+f[0]+'</summary><p>'+f[1]+'</p></details>'}).join('')+'</div></section>'};
-A.home=function(target){drawCandles();tilt($('view'));magnet($('view'));bindNl();setStoryMode();
-  if(target)setTimeout(function(){scrollToEl($(target),80)},120)};
-function drawCandles(){var c=$('candles');if(!c)return;var w=c.parentNode.clientWidth,h=c.parentNode.clientHeight,dpr=window.devicePixelRatio||1;c.width=w*dpr;c.height=h*dpr;c.style.width=w+'px';c.style.height=h+'px';var g=c.getContext('2d');g.scale(dpr,dpr);
-  var r=rng(42),n=Math.floor(w/16),pts=[],up=cssv('--ink'),dn=cssv('--acc');
-  for(var i=0;i<n;i++){var base=h*.92-Math.pow(i/n,2.2)*h*.75,o=base+(r()-.5)*h*.05,cl=base+(r()-.62)*h*.06,hi=Math.min(o,cl)-r()*h*.03,lo=Math.max(o,cl)+r()*h*.03,x=i*16+8;g.globalAlpha=.06;g.strokeStyle=g.fillStyle=cl<o?up:dn;g.beginPath();g.moveTo(x,hi);g.lineTo(x,lo);g.lineWidth=1;g.stroke();g.fillRect(x-4,Math.min(o,cl),8,Math.max(2,Math.abs(cl-o)));pts.push([x,base])}
-  g.globalAlpha=.18;g.strokeStyle=dn;g.lineWidth=1.5;g.beginPath();pts.forEach(function(p,k){k?g.lineTo(p[0],p[1]):g.moveTo(p[0],p[1])});g.stroke()}
+/* ---------- landing: explainer ---------- */
+var LA={rings:'<circle cx="32" cy="32" r="26"/><circle cx="32" cy="40" r="18"/><circle cx="32" cy="46" r="12"/><circle cx="32" cy="50" r="6"/>',
+ gold:'<rect x="12" y="6" width="40" height="52"/><path d="M12 31h40M32 31v27M32 44h20M42 44v14M42 51h10"/><path d="M12 31A25 25 0 0 1 37 6M32 31a20 20 0 0 1 20 20"/>',
+ globe:'<circle cx="32" cy="32" r="26"/><ellipse cx="32" cy="32" rx="12" ry="26"/><path d="M6 32h52M10 18h44M10 46h44"/><path d="M14 14l36 36M50 14 14 50" opacity=".4"/>',
+ candles:'<path d="M14 18v32M30 10v40M46 22v26"/><rect x="9" y="24" width="10" height="16"/><rect x="25" y="16" width="10" height="20"/><rect x="41" y="28" width="10" height="12"/><path d="M6 56h52"/>',
+ folder:'<path d="M8 16h18l5 6h25v32H8z"/><path d="M8 28h48"/><path d="M16 38h20M16 44h28"/>',
+ mail:'<rect x="8" y="14" width="48" height="36" rx="3"/><path d="m8 18 24 18 24-18"/><path d="M8 50l18-16M56 50 38 34"/>',
+ bell:'<path d="M6 50C18 50 22 14 32 14S46 50 58 50"/><path d="M32 14v36M20 50v-6M44 50v-6"/>',
+ bars:'<path d="M8 56h48"/><rect x="12" y="36" width="8" height="20"/><rect x="26" y="26" width="8" height="30"/><rect x="40" y="16" width="8" height="40"/>',
+ net:'<circle cx="16" cy="18" r="5"/><circle cx="46" cy="14" r="5"/><circle cx="32" cy="38" r="6"/><circle cx="14" cy="50" r="5"/><circle cx="50" cy="48" r="5"/><path d="M20 21l8 12M42 18l-7 15M28 42l-10 6M37 41l9 5"/>'};
+function la(n){return '<svg class="la" viewBox="0 0 64 64" aria-hidden="true">'+LA[n]+'</svg>'}
+var VAST=[['DCF','bell',6,16],['EBITDA','bars',20,8],['WACC','net',34,18],['Working capital','candles',62,10],['ROCE','rings',78,20],['Moats','globe',92,9],['Bank NIM','bars',8,74],['Capex cycles','candles',22,86],['Consensus','net',40,76],['Free cash flow','bell',60,86],['Credit spreads','globe',76,74],['Unit economics','gold',92,84]];
+function vastHtml(){return '<section class="vast" id="vast"><div class="vast-pin"><h2 class="vast-t">Finance is vast.</h2>'+VAST.map(function(v,k){return '<span class="vc" data-k="'+k+'" style="left:'+v[2]+'%;top:'+v[3]+'%">'+la(v[1])+'<small>'+v[0]+'</small></span>'}).join('')+'</div></section>'}
+function mapHtml(){var W=900,H=660,rx=70,ry=H/2,ax=330,lx=590,cols=['#4FD1A5','#F2C14E','#F2765E','#8AB6D6'],p='',t='',n=0,tot=LESSONS.length;
+  MODULES.forEach(function(m,i){var ay=H*(i+.5)/MODULES.length,c=cols[i%4];
+    p+='<path class="ml" style="--d:'+(i*120)+'ms" stroke="'+c+'" d="M'+rx+' '+ry+'C'+(rx+150)+' '+ry+','+(ax-150)+' '+ay+','+ax+' '+ay+'" pathLength="1"/>';
+    m.l.forEach(function(k){var ly=18+n*(H-36)/(tot-1);n++;
+      p+='<path class="ml leaf" style="--d:'+(500+n*35)+'ms" stroke="'+c+'" d="M'+ax+' '+ay+'C'+(ax+130)+' '+ay+','+(lx-130)+' '+ly+','+lx+' '+ly+'" pathLength="1"/>';
+      var L=LESSONS[k-1].t;t+='<a href="#lesson-'+k+'"><circle class="mn" cx="'+lx+'" cy="'+ly+'" r="3.2" fill="'+c+'"/><text class="mt" x="'+(lx+12)+'" y="'+(ly+4)+'" style="--d:'+(600+n*35)+'ms">'+esc(L.length>40?L.slice(0,38)+'…':L)+'</text></a>'});
+    t+='<a href="#roadmap-'+(i+1)+'"><circle class="an" cx="'+ax+'" cy="'+ay+'" r="6" fill="'+c+'"/><text class="at" x="'+ax+'" y="'+(ay-14)+'" text-anchor="middle">'+m.t+'</text></a>'});
+  return '<section class="map" id="map"><div class="map-l" data-rv><h2>So we put it <span class="dim">in order.</span></h2><p class="lede">'+LESSONS.length+' lessons in '+MODULES.length+' archives, read in sequence. Every concept builds on the one before, so nothing is left as a black box.</p><a class="btn pri mag" href="#roadmap">Explore the curriculum'+ico('arrow')+'</a></div><div class="map-r"><svg class="mapsvg" viewBox="0 0 '+W+' '+H+'" role="img" aria-label="Curriculum map"><g fill="none">'+p+'</g>'+t+'<g class="root"><circle cx="'+rx+'" cy="'+ry+'" r="34" class="rootc"/><svg x="'+(rx-28)+'" y="'+(ry-28)+'" width="56" height="56" viewBox="20 18 361 364">'+monkeyInner()+'</svg></g></svg></div></section>'}
+function monkeyInner(){return '<circle class="mk-bg" cx="200" cy="200" r="168"/><path class="mk-b" fill-rule="evenodd" d="'+MK.body+'"/><path class="mk-b" d="'+MK.nose+'"/>'+MK.eyes.map(function(e){return '<circle class="mk-e" cx="'+e[0]+'" cy="'+e[1]+'" r="'+e[2]+'"/>'}).join('')}
+function revealWords(t){return t.split(' ').map(function(w){return '<span class="rw">'+w+'</span>'}).join(' ')}
+var ptab=0;
+function practiseHtml(){return '<section class="prac"><div class="sec-h" data-rv><div><h2>Then practise <span class="dim">until it’s instinct.</span></h2><p class="lede">Read once, then answer until you stop needing to think.</p></div></div><div class="pt-card" data-rv><div class="pt-top"><div class="pt-tabs">'+['Question bank','Daily three','Speed round'].map(function(t,k){return '<button type="button" class="pt'+(k===ptab?' on':'')+'" data-ptab="'+k+'"><i>'+(k+1)+'</i>'+t+'</button>'}).join('')+'</div><a class="btn pri sm" id="pt-go" href="#practice">Open practice'+ico('arrow')+'</a></div><div class="pt-body" id="pt-body">'+ptBody()+'</div></div></section>'}
+function ptBody(){
+  if(ptab===2)return '<div class="pt-speed"><div><h3>60 seconds. As many as you can.</h3><p class="small">Percentages, growth and P/E, the arithmetic every interview opens with.</p></div><a class="btn ghost" href="#practice">Start a round'+ico('arrow')+'</a></div>';
+  var ids=ptab===1?todays:[0,8,15,22,30,40].filter(function(i){return QS[i]});
+  return '<div class="pt-list">'+ids.map(function(i){var q=QS[i],lv=PTS[q.d];return '<button type="button" class="pq" data-pq="'+i+'"><span><b>'+q.q.replace(/<[^>]+>/g,'')+'</b><small>'+q.t+'</small></span><i class="lv l'+lv+'"><em></em><em></em><em></em></i></button>'}).join('')+'</div>'}
+var mg={i:0,s:0,n:0,st:0,best:store.get('mgbest',0),done:false};
+function mgHtml(){return '<section class="exp"><div class="sec-h" data-rv><div><h2>Don’t just read, <span class="dim">test it.</span></h2><p class="lede">A forecast lands on your desk. Could the business really do this?</p></div><a class="btn ghost sm" href="#flaw">Open the full game'+ico('arrow')+'</a></div><div class="mg card" id="mg" data-rv></div></section>'}
+function mgRender(){var el=$('mg');if(!el)return;var f=FLAWS[mg.i%FLAWS.length];
+  el.innerHTML='<div class="mg-top"><div class="mg-tags"><span class="tag on">Flaw or fine</span><span class="tag">Case '+pad2(mg.i%FLAWS.length+1)+'</span></div><div class="mg-chips"><span>Score <b>'+mg.s+' / '+mg.n+'</b></span><span>Accuracy <b>'+(mg.n?Math.round(mg.s/mg.n*100):0)+'%</b></span><span>Streak <b>'+mg.st+'</b></span><span>Best <b>'+mg.best+'</b></span></div></div><p class="mg-q">'+f[0]+'</p>'+
+  (mg.done?'<div class="mg-v '+(mg.ok?'ok':'no')+'"><b>'+(mg.ok?'Correct.':'Not quite.')+'</b> It’s '+(f[1]?'a flaw':'fine')+'. '+f[2]+'</div><button type="button" class="btn mg-next" id="mg-next">Next case'+ico('arrow')+'</button>':'<p class="mg-hint">Flaws are hard to spot because every number looks plausible on its own. That is the whole skill.</p><div class="mg-btns"><button type="button" class="mg-b no" data-mg="1">'+ico('x')+'Flaw</button><button type="button" class="mg-b yes" data-mg="0">'+ico('check')+'Fine</button></div>')}
+function mgAnswer(saidFlaw,src){var f=FLAWS[mg.i%FLAWS.length];mg.ok=saidFlaw===f[1];mg.n++;if(mg.ok){mg.s++;mg.st++;if(mg.st>mg.best){mg.best=mg.st;store.set('mgbest',mg.best)}var r=src.getBoundingClientRect();confetti(r.left+r.width/2,r.top)}else mg.st=0;mg.done=true;mgRender()}
+function faqHtml(){return '<section class="faq2"><div data-rv><h2>Questions, <span class="dim">answered.</span></h2><p class="lede">What it costs, where to start and how much time it takes.</p></div><div class="faq" data-rv>'+[['Is it free?','Yes. The lessons, practice, games and the Sunday Wrap are all free.'],['Do I need a finance background?','No. The first archive starts from how to read a profit and loss statement.'],['Who is behind it?','Practitioners, including CFA® charterholders and FRM® holders. Every lesson is checked against filings and textbooks, not generated.'],['How much time should I spend each day?','Ten minutes for the daily three keeps the habit. A lesson takes about eight. One a day finishes the curriculum in under a month.'],['How is this different from reading a textbook?','Every idea is tied to a real-looking company, a number you have to work out, and a check you can run. You practise judgment, not definitions.'],['Is any of this investment advice?','No. Companies in examples are invented, and nothing here recommends buying or selling a security.']].map(function(f){return '<details><summary>'+f[0]+'</summary><p>'+f[1]+'</p></details>'}).join('')+'</div></section>'}
+function ctaHtml(){return '<section class="cta2" data-rv><div class="cta-l"><canvas class="cta-ascii" id="cta-ascii" aria-hidden="true"></canvas><h2>You’re ready when the numbers start talking.</h2><p>Start with the map. Read the archive. Prove it in practice.</p><div class="row"><a class="btn pri" href="#roadmap">Start learning'+ico('arrow')+'</a><a class="btn ghost" href="#roadmap">View curriculum</a></div></div><div class="cta-r">'+[[MODULES.length,'archives'],[LESSONS.length,'lessons'],[QS.length,'practice questions'],[GLOSSARY.length,'glossary terms'],[FLAWS.length,'forecast cases'],[3,'questions every morning']].map(function(s){return '<div><b data-count="'+s[0]+'">'+s[0]+'</b><span>'+s[1]+'</span></div>'}).join('')+'</div></section>'}
+R.home=function(){
+  return '<section class="qh"><canvas class="ascii" id="ascii" aria-hidden="true"></canvas><div class="qh-in"><h1 class="split">'+splitWords([['Finance, learned',0],['for real.',0]])+'</h1><p class="lede">CAGR Club takes you from your first balance sheet to the final-round interview: lessons in order, practice every day, and a club doing the same.</p><div class="row">'+joinBtn('',"Start learning")+'</div>'+creds()+'</div>'+
+  '<div class="qcards">'+[['rings','Curriculum',MODULES.length+' archives · '+LESSONS.length+' lessons','#roadmap'],['gold','Daily three','A short set, every morning','#daily'],['globe','Practice',QS.length+' questions · speed rounds','#practice'],['candles','Flaw or fine',FLAWS.length+' forecast cases','#flaw'],['folder','Library',GLOSSARY.length+' terms · reading list','#library'],['mail','And more','The Sunday Wrap · the club','#signup']].map(function(c,k){return '<a class="qc" href="'+c[3]+'" data-rv style="--d:'+(k*70)+'ms">'+la(c[0])+'<b>'+c[1]+'</b><small>'+c[2]+'</small></a>'}).join('')+'</div></section>'+
+  vastHtml()+mapHtml()+storyHtml()+practiseHtml()+mgHtml()+faqHtml()+ctaHtml()};
+A.home=function(target){countUp($('view'));magnet($('view'));setStoryMode();mgRender();asciiStart();ctaAscii();
+  var m=$('map');if(m&&io){var o=new IntersectionObserver(function(es){if(es[0].isIntersecting){m.classList.add('drawn');o.disconnect()}},{threshold:.25});o.observe(m)}else if(m)m.classList.add('drawn');
+  homeTick();if(target)setTimeout(function(){scrollToEl($(target),80)},150)};
+function homeTick(){var v=$('vast');if(v){var r=v.getBoundingClientRect(),tot=v.offsetHeight-innerHeight,p=Math.max(0,Math.min(1,-r.top/(tot||1)));
+    v.querySelector('.vast-t').style.opacity=(1-p*.75).toFixed(3);v.querySelector('.vast-t').style.transform='scale('+(1-p*.06).toFixed(3)+')';
+    $$('.vc',v).forEach(function(c,k){var q=Math.max(0,Math.min(1,p*2.2-k*.07));c.style.opacity=q.toFixed(3);c.style.transform='translateY('+((1-q)*90).toFixed(1)+'px) scale('+(.85+q*.15).toFixed(3)+')'})}
+  var h=$('rv-h');if(h){var s=$('story').getBoundingClientRect(),ratio=Math.max(0,Math.min(1,(innerHeight*.95-s.top)/(innerHeight*.75))),ws=$$('.rw',h),n=Math.round(ratio*ws.length);ws.forEach(function(w,k){w.classList.toggle('lit',k<n)});var tl=$('tail');if(tl)tl.style.strokeDashoffset=(1-ratio).toFixed(3)}}
 
+/* ascii monkey */
+var asc={raf:0,last:0,chars:null};
+function asciiStart(){var c=$('ascii');if(!c)return;cancelAnimationFrame(asc.raf);
+  var host=c.parentNode,w=host.clientWidth,h=Math.min(host.clientHeight,innerHeight*1.05),dpr=Math.min(2,window.devicePixelRatio||1);c.width=w*dpr;c.height=h*dpr;c.style.height=h+'px';
+  var g=c.getContext('2d');g.setTransform(dpr,0,0,dpr,0,0);
+  var cs=innerWidth<620?9:12,lh=cs*1.35,cols=Math.ceil(w/cs),rows=Math.ceil(h/lh);
+  var size=Math.min(h*.92,w*(innerWidth<900?1.05:.52)),ox=innerWidth<900?w*.5-size*.5:w*.7-size*.5,oy=innerWidth<900?h*.18:h*.04,k=size/361;
+  var off=document.createElement('canvas');off.width=cols;off.height=rows;var og=off.getContext('2d');og.setTransform(k/cs,0,0,k/lh,(ox-20*k)/cs,(oy-18*k)/lh);
+  og.fillStyle='#000';og.fill(new Path2D(MK.body),'evenodd');og.fill(new Path2D(MK.nose));var mask=og.getImageData(0,0,cols,rows).data;
+  var D='#$%@&8BWM',S='0123456789₹%.:+-',grid=[];for(var i=0;i<cols*rows;i++)grid.push(Math.random());
+  var dark=themeNow()==='dark',inC=dark?'115,224,183':'30,133,102',outC=dark?'111,168,148':'60,100,85';
+  function draw(t){g.clearRect(0,0,w,h);g.font='500 '+(cs*.92)+'px "Geist Mono",ui-monospace,monospace';g.textBaseline='top';
+    var ex=MK.eyes.map(function(e){var cr=c.getBoundingClientRect(),cx=ox+(e[0]-20)*k,cy=oy+(e[1]-18)*k,dx=ptr.x-(cx+cr.left),dy=ptr.y-(cy+cr.top),d=Math.sqrt(dx*dx+dy*dy)||1,m=Math.min(e[2]*k*.55,d/30);return [cx+dx/d*m,cy+dy/d*m,e[2]*k*.62]});
+    for(var y=0;y<rows;y++)for(var x=0;x<cols;x++){var idx=y*cols+x,v=grid[idx],inside=mask[idx*4+3]>100,px=x*cs,py=y*lh,eye=false;
+      for(var e=0;e<2;e++){var ddx=px+cs/2-ex[e][0],ddy=py+lh/2-ex[e][1];if(ddx*ddx+ddy*ddy<ex[e][2]*ex[e][2])eye=true}
+      var fade=Math.max(0,1-py/h*1.05)*(innerWidth<900?.45:1);
+      if(eye){g.fillStyle=dark?'rgba(242,193,78,'+(.95*fade+.05)+')':'rgba(17,33,27,'+(.85*fade+.1)+')';g.fillText('@',px,py)}
+      else if(inside){g.fillStyle='rgba('+inC+','+((.28+v*.45)*fade).toFixed(3)+')';g.fillText(D[(v*D.length)|0],px,py)}
+      else if(v>.55){g.fillStyle='rgba('+outC+','+((v-.55)*.32*fade).toFixed(3)+')';g.fillText(S[(v*S.length*7|0)%S.length],px,py)}}}
+  function loop(t){asc.raf=requestAnimationFrame(loop);if(t-asc.last<90)return;asc.last=t;var r=c.getBoundingClientRect();if(r.bottom<0)return;for(var i=0;i<grid.length*.035;i++)grid[(Math.random()*grid.length)|0]=Math.random();draw(t)}
+  draw(0);if(!RM)asc.raf=requestAnimationFrame(loop)}
+function ctaAscii(){var c=$('cta-ascii');if(!c)return;var w=c.parentNode.clientWidth,h=c.parentNode.clientHeight,dpr=Math.min(2,window.devicePixelRatio||1);c.width=w*dpr;c.height=h*dpr;var g=c.getContext('2d');g.scale(dpr,dpr);g.font='500 11px "Geist Mono",monospace';var S='0123456789₹%#$';
+  for(var y=0;y<h;y+=15)for(var x=0;x<w;x+=10){var a=Math.max(0,(y/h-.35))*.5*Math.random();if(a>.02){g.fillStyle='rgba(180,240,215,'+a.toFixed(3)+')';g.fillText(S[(Math.random()*S.length)|0],x,y)}}}
+function drawCandles(){asciiStart()}
 /* newsletter */
 function nlHtml(){var me=store.get('nl',null);
   return '<section class="nl" id="signup"><div class="nl-card" data-rv><div class="nl-g"><div class="nl-l"><h2>The week in Indian markets, <em>explained like an analyst would.</em></h2><p class="lede">What moved, the one number that mattered, and a chart worth saving. Five minutes, every Sunday morning. Your invite to the club comes with the first issue.</p>'+
@@ -309,18 +363,20 @@ function rHtml(){$('r-l').innerHTML=LINKS.filter(function(l){return rType==='All
 A.reading=rHtml;
 R.memos=function(){return '<section class="sec">'+mono('LIBRARY','MEMOS')+'<h1 class="big-serif">Memos.</h1><p class="lede">Short notes, one idea each.</p>'+libTabs('memos')+'<div class="memos">'+MEMOS.map(function(m,k){return '<article class="card memo"><span class="memo-n">'+pad2(k+1)+'</span><h3 class="mid-serif">'+m[0]+'</h3><p>'+m[1]+'</p></article>'}).join('')+'</div></section>'};
 
+/* ---------- footer ---------- */
+function renderFoot(){var me=store.get('nl',null);$('foot').innerHTML='<div class="ft"><div class="ft-brand"><div class="ft-mk">'+monkey('mk-ft',true)+'</div>'+monkey('mk-logo')+'<b>Learn finance, for free.</b><span class="small">Questions or ideas? Say hello in the club.</span></div><div class="ft-main"><div class="ft-cols"><div><b>Explore</b><a href="#daily">Daily</a><a href="#flaw">Flaw or fine</a></div><div><b>Learn</b><a href="#roadmap">Curriculum</a><a href="#practice">Practice</a><a href="#library">Glossary</a></div><div><b>More</b><a href="#reading">Reading list</a><a href="'+inviteHref()+'">Join the club</a></div></div><div class="ft-nl" id="signup"><b>The Sunday Wrap</b><p class="small">What moved, the number that mattered, and a chart worth saving. Every Sunday. No spam.</p>'+(me?'<div class="nl-done">'+ico('check')+'<span>You’re on the list as <b>'+esc(me)+'</b>.</span></div>':'<form class="nl-f" id="nl-f" novalidate><label class="sr" for="nl-e">Email</label><input id="nl-e" type="email" autocomplete="email" placeholder="you@example.com" required><input class="hp" name="website" tabindex="-1" autocomplete="off" aria-hidden="true"><button class="btn pri sm" type="submit">Subscribe</button></form><p class="small" id="nl-m"></p>')+'</div><p class="foot-legal">Education only, not investment advice. Companies in examples are invented. CFA® and Chartered Financial Analyst® are trademarks owned by CFA Institute. FRM® is a trademark of GARP. Neither organisation endorses or is affiliated with CAGR Club.</p></div></div>';bindNl()}
 /* ---------- shell ---------- */
 document.querySelector('.logo').innerHTML=logoMark()+'<span class="wm">CAGR<i>club</i></span>';
-$('foot-brand').innerHTML=logoMark()+'<div><b>CAGR<i>club</i></b></div>';$('bgmk').innerHTML=monkey('mk-bgm',true);
-$('nav').innerHTML=NAV.map(function(n){return '<a href="#'+n[0]+'" data-nav="'+n[0]+'">'+n[1]+'</a>'}).join('');
+renderFoot();$('bgmk').innerHTML=monkey('mk-bgm',true);
+$('nav').innerHTML=NAV.map(function(n){return '<a href="#'+n[0]+'" data-nav="'+n[0]+'">'+ico(n[2])+n[1]+'</a>'}).join('');
 $('tabs').innerHTML=[['home','Home','home']].concat(NAV.slice(0,4)).map(function(n){return '<a href="#'+n[0]+'" data-nav="'+n[0]+'">'+ico(n[2])+n[1].replace('Flaw or fine','Flaw')+'</a>'}).join('');
 $('find').innerHTML=ico('search')+'<span>Search</span><kbd>'+(/Mac|iPhone|iPad/.test(navigator.platform||'')?'⌘K':'Ctrl K')+'</kbd>';
 $('totop').innerHTML='<svg class="tt-ring" viewBox="0 0 60 60"><circle cx="30" cy="30" r="27"/><circle id="tt-p" cx="30" cy="30" r="27" stroke-dasharray="169.6" stroke-dashoffset="169.6" transform="rotate(-90 30 30)"/></svg>'+ico('up');
 $('totop').addEventListener('click',function(){if(lenis)lenis.scrollTo(0);else window.scrollTo({top:0,behavior:RM?'auto':'smooth'})});
-function themeNow(){return document.documentElement.getAttribute('data-theme')||'light'}
+function themeNow(){return document.documentElement.getAttribute('data-theme')||'dark'}
 function themeIcon(){$('theme').innerHTML=ico(themeNow()==='dark'?'sun':'moon')}
 themeIcon();
-$('theme').addEventListener('click',function(){var nx=themeNow()==='dark'?'light':'dark';document.documentElement.setAttribute('data-theme',nx);store.set('theme2',nx);themeIcon();drawCandles()});
+$('theme').addEventListener('click',function(){var nx=themeNow()==='dark'?'light':'dark';document.documentElement.setAttribute('data-theme',nx);store.set('theme3',nx);themeIcon();drawCandles()});
 window.addEventListener('resize',function(){clearTimeout(drawCandles.t);drawCandles.t=setTimeout(function(){drawCandles();setStoryMode();},150)});
 
 /* custom cursor */
@@ -338,7 +394,7 @@ var TITLES={home:'CAGR Club',roadmap:'Curriculum',practice:'Practice',daily:'Dai
 var lastView=null;
 function go(){var p=parse(),name=p[0],v=$('view');
   if(name==='home'&&p[1]&&lastView==='home'&&$(p[1])){scrollToEl($(p[1]),80);return}
-  clearTimers();showClear();lastView=name;
+  clearTimers();showClear();lastView=name;document.body.dataset.view=name;cancelAnimationFrame(asc.raf);
   v.innerHTML=R[name](p[1]);
   var key=name==='lesson'?'roadmap':(name==='reading'||name==='memos')?'library':name;
   $$('[data-nav]').forEach(function(a){a.classList.toggle('on',a.dataset.nav===key)});
@@ -354,10 +410,14 @@ function spy(){var hs=$$('.lesson article h2'),bs=$$('.rail button'),cur=0,i;
   for(i=0;i<bs.length;i++)bs[i].classList.toggle('on',i===cur);
   var d=document.documentElement,max=d.scrollHeight-window.innerHeight,pr=max>0?Math.min(1,window.scrollY/max):0;
   $('readbar').style.width=hs.length?pr*100+'%':'0';
-  $('tt-p').setAttribute('stroke-dashoffset',(169.6*(1-pr)).toFixed(1));$('totop').classList.toggle('on',window.scrollY>700);}
-var tick=false;window.addEventListener('scroll',function(){if(tick)return;tick=true;requestAnimationFrame(function(){tick=false;spy();storyTick();eyeReq()})},{passive:true});
+  document.body.classList.toggle('scrolled',window.scrollY>30);$('tt-p').setAttribute('stroke-dashoffset',(169.6*(1-pr)).toFixed(1));$('totop').classList.toggle('on',window.scrollY>700);}
+var tick=false;window.addEventListener('scroll',function(){if(tick)return;tick=true;requestAnimationFrame(function(){tick=false;spy();storyTick();homeTick();eyeReq()})},{passive:true});
 
 document.addEventListener('click',function(e){var t=e.target,b;
+  if((b=t.closest('[data-ptab]'))){ptab=+b.dataset.ptab;$$('[data-ptab]').forEach(function(x){x.classList.toggle('on',x===b)});$('pt-body').innerHTML=ptBody();return}
+  if((b=t.closest('[data-pq]'))){px.topic='All';px.diff='All';px.show='All';px.cur=+b.dataset.pq;location.hash='practice';return}
+  if((b=t.closest('[data-mg]'))){mgAnswer(b.dataset.mg==='1',b);return}
+  if((b=t.closest('#mg-next'))){mg.i++;mg.done=false;mgRender();return}
   if((b=t.closest('[data-opt]'))){var qi=+b.dataset.qi,k=+b.dataset.opt;answer(qi,k,k===QS[qi].a,b);return}
   if((b=t.closest('[data-check]'))){checkNum(+b.dataset.check,b);return}
   if((b=t.closest('[data-give]'))){answer(+b.dataset.give,'—',false);return}
