@@ -17,8 +17,15 @@ var FINE=window.matchMedia&&matchMedia('(hover:hover) and (pointer:fine)').match
 var I={replay:'<path d="M4 12a8 8 0 1 0 2.3-5.6M4 4v4h4"/>',map:'<path d="M9 4 3 6v14l6-2 6 2 6-2V4l-6 2-6-2zM9 4v14M15 6v14"/>',target:'<circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="4"/><circle cx="12" cy="12" r=".5"/>',cal:'<path d="M4 6h16v14H4zM4 10h16M8 3v4M16 3v4"/>',book:'<path d="M5 4h11a3 3 0 0 1 3 3v13H8a3 3 0 0 1-3-3zM5 17a3 3 0 0 1 3-3h11"/>',home:'<path d="M4 11 12 4l8 7v9h-5v-6H9v6H4z"/>',search:'<circle cx="11" cy="11" r="6"/><path d="m20 20-4.5-4.5"/>',flame:'<path d="M12 3c1 4 5 5.5 5 10a5 5 0 0 1-10 0c0-2 1-3.2 2-4 0 2 1 3 2 3 0-3-1-5 1-9z"/>',sun:'<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>',moon:'<path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z"/>',check:'<path d="m5 12 5 5 9-10"/>',x:'<path d="M6 6l12 12M18 6 6 18"/>',arrow:'<path d="M5 12h14M13 6l6 6-6 6"/>',left:'<path d="M19 12H5M11 6l-6 6 6 6"/>',spark:'<path d="M12 3v6M12 15v6M3 12h6M15 12h6"/>',flag:'<path d="M5 21V4h11l-2 4 2 4H5"/>',bolt:'<path d="M13 3 5 14h6l-1 7 8-11h-6z"/>',lock:'<rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/>',ext:'<path d="M14 4h6v6M20 4l-9 9M18 14v6H4V6h6"/>',clock:'<circle cx="12" cy="12" r="8"/><path d="M12 8v4l3 2"/>',mail:'<rect x="3" y="5" width="18" height="14" rx="2"/><path d="m4 7 8 6 8-6"/>',up:'<path d="M12 19V5M6 11l6-6 6 6"/>'};
 function ico(n){return '<svg class="i" viewBox="0 0 24 24" aria-hidden="true">'+I[n]+'</svg>'}
 
-/* ---------- logo ---------- */
-function logoMark(){return '<svg class="lm" viewBox="0 0 32 32" aria-hidden="true"><rect class="lm-bg" width="32" height="32" rx="9"/><path class="lm-l" d="M7 23.5C14 23 20 19 25 9"/><circle class="lm-d" cx="25" cy="9" r="3.4"/></svg>'}
+/* ---------- mascot ---------- */
+function monkey(cls,bare){return '<svg class="mk '+(cls||'')+'" viewBox="20 18 361 364" aria-hidden="true">'+(bare?'':'<circle class="mk-bg" cx="200" cy="200" r="168"/>')+'<path class="mk-b" fill-rule="evenodd" d="'+MK.body+'"/><path class="mk-b" d="'+MK.nose+'"/>'+MK.eyes.map(function(e){return '<g class="mk-eye" data-cx="'+e[0]+'" data-cy="'+e[1]+'"><circle class="mk-e" cx="'+e[0]+'" cy="'+e[1]+'" r="'+e[2]+'"/></g>'}).join('')+'</svg>'}
+function logoMark(){return monkey('mk-logo')}
+var eyeQ=false,ptr={x:innerWidth*.3,y:innerHeight*.4};
+function eyes(){eyeQ=false;$$('svg.mk').forEach(function(s){var r=s.getBoundingClientRect();if(!r.width||r.bottom<0||r.top>innerHeight)return;var k=r.width/361,big=s.classList.contains('mk-bgm');
+  $$('.mk-eye',s).forEach(function(g){var ex=r.left+(+g.dataset.cx-20)*k,ey=r.top+(+g.dataset.cy-18)*k,dx=ptr.x-ex,dy=ptr.y-ey,d=Math.sqrt(dx*dx+dy*dy)||1,m=Math.min(big?6:4.5,d/(big?60:40));g.style.transform='translate('+(dx/d*m).toFixed(2)+'px,'+(dy/d*m).toFixed(2)+'px)'})})}
+function eyeReq(){if(!eyeQ){eyeQ=true;requestAnimationFrame(eyes)}}
+window.addEventListener('pointermove',function(e){ptr.x=e.clientX;ptr.y=e.clientY;eyeReq()},{passive:true});
+(function blink(){setTimeout(function(){$$('svg.mk').forEach(function(s){s.classList.add('blink')});setTimeout(function(){$$('svg.mk').forEach(function(s){s.classList.remove('blink')})},170);blink()},2600+Math.random()*3600)})();
 /* ---------- state ---------- */
 var done=store.get('done',{}),ans=store.get('ans',{}),uid=0,timers=[];
 var DAY=Math.floor(Date.now()/864e5),BASE=Math.floor(Date.UTC(2026,10,14)/864e5);
@@ -138,51 +145,45 @@ function folders(){return '<div class="folders">'+MODULES.map(function(m,i){var 
   return '<a class="fold-w" href="#roadmap-'+(i+1)+'" data-cur="Open" data-rv style="--d:'+(i*90)+'ms"><span class="folder f-'+f.c+'"><span class="f-back"></span><span class="f-paper"><b>'+LESSONS[m.l[0]-1].t+'</b><i></i><i></i><i></i><i></i></span><span class="f-front">'+art(f.a,i*17+3)+'<span class="f-t ts-'+f.ts+'">'+title+'</span>'+(d?'<span class="f-done">'+d+' read</span>':'')+'</span></span><span class="f-cap">'+m.d+'</span></a>'}).join('')+'</div>'}
 
 /* ---------- shared blocks ---------- */
-function creds(){return '<div class="creds" data-rv><span class="cr-l">Backed by</span><span class="cbadge"><b>CFA<sup>®</sup></b><small>Level I</small></span><span class="cbadge"><b>FRM<sup>®</sup></b><small>Part I &amp; II</small></span></div>'}
+function creds(){return '<p class="backed" data-rv>Backed by CFA® charterholders and FRM® holders</p>'}
 function joinBtn(cls,label){return '<a class="btn pri mag '+(cls||'')+'" href="'+inviteHref()+'"'+inviteAttr()+'>'+(label||'Join the club')+ico('arrow')+'</a>'}
 
-/* ---------- showcase: chatbot vs analyst ---------- */
-var AISEG=[['CementCo is a leading cement maker with ',0],['strong fundamentals',1],['. Revenue has grown at a ',0],['healthy 12% CAGR',2],[', and the company is well placed to ',0],['benefit from India’s infrastructure push',3],['. With robust margins and a solid balance sheet, ',0],['the stock looks attractively valued',4],[' for long-term investors.',0]];
-var NOTES=['Which fundamentals? Not one number.','Price did that. Volumes grew 4% a year.','Every cement stock says this. It’s already in the 30× price.','Never checks capacity. Do the maths.'];
+/* ---------- story: chatbot vs analyst (scroll-driven) ---------- */
+var AISEG=[['CementCo is a leading cement maker with ',0],['strong fundamentals',1],['. Revenue has grown at a ',0],['healthy 12% CAGR',2],[', and the company is well placed to ',0],['benefit from India’s infrastructure push',3],['. With robust margins and a solid balance sheet, ',0],['the stock looks attractively valued for long-term investors',4],['.',0]];
+var NOTES=['Which fundamentals? Not one number.','Price did the work. Volumes grew 4% a year.','Every cement stock says this. It is already in the 30× price.','Never checks capacity. The arithmetic says no.'];
 var AILEN=AISEG.reduce(function(s,x){return s+x[0].length},0);
 var NEED=65000*Math.pow(1.12,5)/12*10/1200;
-function aiHtml(nc){var out='',left=nc;AISEG.forEach(function(sg){if(left<=0)return;var t=sg[0].slice(0,left);left-=sg[0].length;out+=sg[1]?'<span class="cl" data-n="'+sg[1]+'">'+esc(t)+'<sup>'+sg[1]+'</sup></span>':esc(t)});return out+(nc<AILEN?'<span class="caret"></span>':'')}
-function showHtml(){
-  return '<section class="show" id="show"><div class="show-h" data-rv><p class="eyebrow">The problem</p><h2>A chatbot can write the report. <em>Can you tell if it’s true?</em></h2><p class="lede">Most of what AI says about a stock sounds right and checks nothing. CAGR Club trains the part it skips: reading the numbers, and doing the maths.</p></div>'+
-  '<div class="doc" id="doc" data-step="0" data-rv><div class="doc-tabs">'+['The chatbot’s answer','An analyst marks it up','The maths it skipped'].map(function(t,k){return '<button type="button" class="dt" data-dt="'+k+'"><span>'+t+'</span><i></i></button>'}).join('')+'<button type="button" class="dt-re" id="dt-re" aria-label="Play again">'+ico('replay')+'</button></div>'+
-  '<div class="doc-b"><div class="doc-ai"><div class="chat-q">Is CementCo a buy at 30× earnings?</div><p class="chat-who">'+ico('spark')+'Chatbot</p><p class="ai-t" id="ai-t">'+aiHtml(0)+'</p><span class="slop">Sounds right.<br>Checks nothing.</span></div>'+
-  '<div class="doc-side"><ol class="notes">'+NOTES.map(function(n,k){return '<li class="note" data-k="'+(k+1)+'"><b>'+(k+1)+'</b>'+n+'</li>'}).join('')+'</ol>'+
-  '<div class="analyst"><p class="eyebrow">The analyst’s version</p><p class="an-q">To earn 12% a year from ₹65,000 crore, CementCo must sell <b>'+Math.round(NEED)+' million tonnes</b> in year five.</p><div class="an-bars"><div><span>The price needs</span><i style="--w:100%"></i><b>'+NEED.toFixed(1)+' mt</b></div><div><span>Its plants make</span><i class="ok" style="--w:'+(40.5/NEED*100).toFixed(1)+'%"></i><b>40.5 mt</b></div></div><p class="an-v">The price assumes plants nobody has announced. <b>Not a buy until the capex is.</b></p><a class="link" href="#lesson-'+PRICED_LESSON+'">Learn this check'+ico('arrow')+'</a></div></div></div></div></section>'}
-var showT=[];
-function showClear(){showT.forEach(clearTimeout);showT=[]}
-function showStep(k,auto){var d=$('doc');if(!d)return;showClear();d.dataset.step=k;d.classList.remove('run');void d.offsetWidth;d.classList.add('run');
-  var ai=$('ai-t'),notes=$$('.note',d),cls;
-  if(k===0){notes.forEach(function(n){n.classList.remove('on')});var nc=0;(function type(){nc=Math.min(AILEN,nc+(RM?AILEN:4));ai.innerHTML=aiHtml(nc);if(nc<AILEN)showT.push(setTimeout(type,22));else if(auto)showT.push(setTimeout(function(){showStep(1,true)},1100))})()}
-  else{ai.innerHTML=aiHtml(AILEN);cls=$$('.cl',d);
-    if(k===1){cls.forEach(function(c){c.classList.remove('hit')});notes.forEach(function(n){n.classList.remove('on')});
-      [0,1,2,3].forEach(function(j){showT.push(setTimeout(function(){cls[j].classList.add('hit');notes[j].classList.add('on')},RM?0:350+j*850))});
-      if(auto)showT.push(setTimeout(function(){showStep(2,true)},RM?0:4600))}
-    else{cls.forEach(function(c){c.classList.add('hit')});notes.forEach(function(n){n.classList.add('on')})}}}
-function bindShow(){var d=$('doc');if(!d)return;
-  $$('.dt',d).forEach(function(b){b.addEventListener('click',function(){showStep(+b.dataset.dt,false)})});
-  $('dt-re').addEventListener('click',function(){showStep(0,true)});
-  if(!io){showStep(2,false);return}
-  var o=new IntersectionObserver(function(es){if(es[0].isIntersecting){o.disconnect();showStep(0,true)}},{threshold:.35});o.observe(d)}
+function aiHtml(nc,hit){var out='',left=nc;AISEG.forEach(function(sg){if(left<=0)return;var t=sg[0].slice(0,left);left-=sg[0].length;out+=sg[1]?'<span class="cl'+(hit>=sg[1]?' hit':'')+'" data-n="'+sg[1]+'">'+esc(t)+(hit>=sg[1]?'<sup>'+sg[1]+'</sup>':'')+'</span>':esc(t)});return out+(nc<AILEN?'<span class="caret"></span>':'')}
+function storyHtml(){
+  return '<section class="story" id="story"><div class="story-pin"><p class="eyebrow">Why this exists</p><h2>AI writes the report. <em>You need to know if it’s true.</em></h2>'+
+  '<div class="story-g"><div class="st-cap"><p class="sc on" data-s="0"><b>01</b>Ask a chatbot if CementCo is a buy at 30× earnings. It sounds like an analyst.</p><p class="sc" data-s="1"><b>02</b>Read it like one. Every line is either unfalsifiable or wrong.</p><p class="sc" data-s="2"><b>03</b>Now do the arithmetic. That is what we teach, and what AI skips.</p></div>'+
+  '<div class="st-stage"><div class="chat" id="st-chat"><div class="chat-q"><span>You</span>Is CementCo a buy at 30× earnings?</div><div class="chat-a"><span class="chat-who">'+ico('spark')+'Chatbot</span><p id="st-ai">'+aiHtml(AILEN,0)+'</p><div class="notes" id="st-notes">'+NOTES.map(function(n,k){return '<p class="note" data-k="'+(k+1)+'"><b>'+(k+1)+'</b>'+n+'</p>'}).join('')+'</div><span class="stamp-slop">SLOP</span></div></div>'+
+  '<div class="analyst" id="st-an"><div class="an-h">'+monkey('mk-xs')+'<div><b>The analyst’s version</b><span class="mono-s">CementCo · price check</span></div></div><p>At ₹65,000 crore, earning 12% a year means CementCo must sell <b>about '+Math.round(NEED)+' million tonnes</b> in year five. Its plants, including announced ones, make <b>40.5</b>.</p><div class="an-bars"><div><span>Price needs</span><i style="--w:100%"></i><b>'+NEED.toFixed(1)+' mt</b></div><div><span>Plants make</span><i class="ok" style="--w:'+(40.5/NEED*100).toFixed(1)+'%"></i><b>40.5 mt</b></div></div><p class="an-v"><b>Verdict:</b> the price assumes plants nobody has announced. Pass until the capex is.</p><a class="link" href="#lesson-'+PRICED_LESSON+'">Run this check yourself'+ico('arrow')+'</a></div></div></div></div></section>'}
+var stKey=-1,stStep=-1;
+function storyTick(){var s=$('story');if(!s)return;
+  if(s.classList.contains('static')){if(stStep!==9){stStep=9;$('st-ai').innerHTML=aiHtml(AILEN,9);s.dataset.step='2';$$('.note',s).forEach(function(n){n.classList.add('on')});$$('.sc',s).forEach(function(n){n.classList.add('on')})}return}
+  var r=s.getBoundingClientRect(),tot=s.offsetHeight-innerHeight,p=Math.max(0,Math.min(1,-r.top/(tot||1)));
+  var step=p<.3?0:p<.64?1:2,nc=Math.round(Math.min(1,.18+p/.26)*AILEN),hit=step===0?0:Math.min(4,Math.floor((p-.3)/.3*5)+1);if(step===2)hit=4;
+  var key=nc*10+hit;if(key!==stKey){stKey=key;$('st-ai').innerHTML=aiHtml(nc,hit)}
+  $$('.note',s).forEach(function(n){n.classList.toggle('on',+n.dataset.k<=hit)});
+  if(step!==stStep){stStep=step;s.dataset.step=step;$$('.sc',s).forEach(function(c){c.classList.toggle('on',+c.dataset.s===step)})}}
+function setStoryMode(){var s=$('story');if(!s)return;s.classList.toggle('static',RM||innerWidth<900);stStep=-1;stKey=-1;storyTick()}
+function showClear(){}
 
 /* ---------- views ---------- */
 var R={},A={};
 R.home=function(){var answered=Object.keys(ans).length;
   return '<section class="hero3"><canvas class="candles" id="candles" aria-hidden="true"></canvas><p class="eyebrow">Equity research, minus the AI slop</p><h1 class="split">'+splitWords([['Anyone can ask AI for a DCF.',0],['Few can tell you why it’s',1]])+' <em class="scrib"><span class="w"><span style="--i:13">wrong.</span></span><svg viewBox="0 0 300 30" preserveAspectRatio="none" aria-hidden="true"><path d="M4 20C60 8 140 6 296 14M30 26C110 18 200 18 270 22"/></svg></em></h1>'+
   '<div class="hero3-f"><p class="lede">CAGR Club teaches the judgment behind equity research: reading the accounts, catching the forecast that cannot happen, and building a view you can defend.</p><div class="row">'+joinBtn('xl')+'<a class="btn ghost xl mag" href="#roadmap">Start learning'+ico('arrow')+'</a></div></div>'+creds()+'</section>'+
-  showHtml()+
+  storyHtml()+
   '<section class="sec"><div class="sec-h" data-rv><div><p class="eyebrow">The curriculum</p><h2>Four archives. <em>Read in order.</em></h2></div><a class="btn ghost mag" href="#roadmap">See every lesson'+ico('arrow')+'</a></div>'+folders()+'</section>'+
   '<section class="sec"><div class="sec-h" data-rv><div><p class="eyebrow">Practice</p><h2>Then you <em>do the reps.</em></h2></div></div><div class="trio">'+
    '<a class="card tc tilt" href="#daily" data-rv><h3>Today’s three</h3><p>Three questions, same for everyone, new every morning.</p><div class="mini-placards">'+todays.map(function(i,k){var a=ans[i];return '<div class="mp '+(a?(a.ok?'ok':'no'):'')+'"><b>'+(a?(a.ok?ico('check'):ico('x')):k+1)+'</b><small>'+QS[i].t+'</small></div>'}).join('')+'</div><span class="link">Play'+ico('arrow')+'</span></a>'+
    '<a class="card tc tilt" href="#practice" data-rv style="--d:90ms"><h3>The question bank</h3><p>Exact answers and full working. Watch the board fill in.</p><div class="mini-heat">'+QS.map(function(q,i){var a=ans[i];return '<i class="'+(a?(a.ok?'ok':'no'):'')+'"></i>'}).join('')+'</div><span class="link">Practise'+ico('arrow')+'</span></a>'+
    '<a class="card tc tilt" href="#flaw" data-rv style="--d:180ms"><h3>Flaw or fine?</h3><p>A forecast lands on your desk. Could the business really do it?</p><div class="mini-fz"><span class="no">'+ico('x')+'Flaw</span><span class="yes">'+ico('check')+'Fine</span></div><span class="link">Play'+ico('arrow')+'</span></a></div></section>'+
   nlHtml()+
-  '<section class="sec faq-s"><div class="sec-h" data-rv><div><p class="eyebrow">Questions</p><h2>Before you <em>join.</em></h2></div></div><div class="faq">'+[['Is it free?','Yes. The lessons, practice, games and the Sunday Wrap are all free.'],['Who is behind it?','People who have passed the CFA® Program Level I and both parts of the FRM® exam. Every lesson is checked against filings and textbooks, not generated.'],['Why not just use AI?','Use it. But it is confident and wrong in exactly the places that cost money: capacity, cash conversion, what is already in the price. Here you learn to check it.'],['Is any of this investment advice?','No. Companies in examples are invented, and nothing here recommends buying or selling a security.']].map(function(f){return '<details data-rv><summary>'+f[0]+'</summary><p>'+f[1]+'</p></details>'}).join('')+'</div></section>'};
-A.home=function(target){drawCandles();tilt($('view'));magnet($('view'));bindNl();bindShow();
+  '<section class="sec faq-s"><div class="sec-h" data-rv><div><p class="eyebrow">Questions</p><h2>Before you <em>join.</em></h2></div></div><div class="faq">'+[['Is it free?','Yes. The lessons, practice, games and the Sunday Wrap are all free.'],['Who is behind it?','Practitioners, including CFA® charterholders and FRM® holders. Every lesson is checked against filings and textbooks, not generated.'],['Why not just use AI?','Use it. But it is confident and wrong in exactly the places that cost money: capacity, cash conversion, what is already in the price. Here you learn to check it.'],['Is any of this investment advice?','No. Companies in examples are invented, and nothing here recommends buying or selling a security.']].map(function(f){return '<details data-rv><summary>'+f[0]+'</summary><p>'+f[1]+'</p></details>'}).join('')+'</div></section>'};
+A.home=function(target){drawCandles();tilt($('view'));magnet($('view'));bindNl();setStoryMode();
   if(target)setTimeout(function(){scrollToEl($(target),80)},120)};
 function drawCandles(){var c=$('candles');if(!c)return;var w=c.parentNode.clientWidth,h=c.parentNode.clientHeight,dpr=window.devicePixelRatio||1;c.width=w*dpr;c.height=h*dpr;c.style.width=w+'px';c.style.height=h+'px';var g=c.getContext('2d');g.scale(dpr,dpr);
   var r=rng(42),n=Math.floor(w/16),pts=[],up=cssv('--ink'),dn=cssv('--acc');
@@ -309,7 +310,7 @@ R.memos=function(){return '<section class="sec">'+mono('LIBRARY','MEMOS')+'<h1 c
 
 /* ---------- shell ---------- */
 document.querySelector('.logo').innerHTML=logoMark()+'<span class="wm">CAGR<i>club</i></span>';
-$('foot-brand').innerHTML=logoMark()+'<div><b>CAGR<i>club</i></b><span>Compound your edge.</span></div>';
+$('foot-brand').innerHTML=logoMark()+'<div><b>CAGR<i>club</i></b></div>';$('bgmk').innerHTML=monkey('mk-bgm',true);
 $('nav').innerHTML=NAV.map(function(n){return '<a href="#'+n[0]+'" data-nav="'+n[0]+'">'+n[1]+'</a>'}).join('');
 $('tabs').innerHTML=[['home','Home','home']].concat(NAV.slice(0,4)).map(function(n){return '<a href="#'+n[0]+'" data-nav="'+n[0]+'">'+ico(n[2])+n[1].replace('Flaw or fine','Flaw')+'</a>'}).join('');
 $('find').innerHTML=ico('search')+'<span>Search</span><kbd>'+(/Mac|iPhone|iPad/.test(navigator.platform||'')?'⌘K':'Ctrl K')+'</kbd>';
@@ -319,7 +320,7 @@ function themeNow(){return document.documentElement.getAttribute('data-theme')||
 function themeIcon(){$('theme').innerHTML=ico(themeNow()==='dark'?'sun':'moon')}
 themeIcon();
 $('theme').addEventListener('click',function(){var nx=themeNow()==='dark'?'light':'dark';document.documentElement.setAttribute('data-theme',nx);store.set('theme2',nx);themeIcon();drawCandles()});
-window.addEventListener('resize',function(){clearTimeout(drawCandles.t);drawCandles.t=setTimeout(function(){drawCandles();},150)});
+window.addEventListener('resize',function(){clearTimeout(drawCandles.t);drawCandles.t=setTimeout(function(){drawCandles();setStoryMode();},150)});
 
 /* custom cursor */
 if(FINE&&!RM){var cur=$('cur'),cx=-100,cy=-100,tx=-100,ty=-100;document.body.classList.add('has-cur');
@@ -344,7 +345,7 @@ function go(){var p=parse(),name=p[0],v=$('view');
   document.title=name==='lesson'?LESSONS[+p[1]-1].t+' · CAGR Club':name==='home'?'CAGR Club':TITLES[name]+' · CAGR Club';
   $('readbar').style.width='0';if(!(name==='roadmap'&&p[1]))toTop();
   if(A[name])A[name](p[1]);
-  reveal(v);v.classList.remove('in');void v.offsetWidth;v.classList.add('in');syncStreak()}
+  reveal(v);v.classList.remove('in');void v.offsetWidth;v.classList.add('in');syncStreak();eyeReq()}
 window.addEventListener('hashchange',go);
 
 function spy(){var hs=$$('.lesson article h2'),bs=$$('.rail button'),cur=0,i;
@@ -353,7 +354,7 @@ function spy(){var hs=$$('.lesson article h2'),bs=$$('.rail button'),cur=0,i;
   var d=document.documentElement,max=d.scrollHeight-window.innerHeight,pr=max>0?Math.min(1,window.scrollY/max):0;
   $('readbar').style.width=hs.length?pr*100+'%':'0';
   $('tt-p').setAttribute('stroke-dashoffset',(169.6*(1-pr)).toFixed(1));$('totop').classList.toggle('on',window.scrollY>700);}
-var tick=false;window.addEventListener('scroll',function(){if(tick)return;tick=true;requestAnimationFrame(function(){tick=false;spy()})},{passive:true});
+var tick=false;window.addEventListener('scroll',function(){if(tick)return;tick=true;requestAnimationFrame(function(){tick=false;spy();storyTick();eyeReq()})},{passive:true});
 
 document.addEventListener('click',function(e){var t=e.target,b;
   if((b=t.closest('[data-opt]'))){var qi=+b.dataset.qi,k=+b.dataset.opt;answer(qi,k,k===QS[qi].a,b);return}
