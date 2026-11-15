@@ -2,7 +2,9 @@
 'use strict';
 /* Paste the Discord invite link here once the server exists, e.g. 'https://discord.gg/abc123'.
    Until then, "Join the club" takes people to the email sign-up. */
-var DISCORD_INVITE='';
+var DISCORD_INVITE='';// leave empty so Join opens the email modal
+var CLUB_DISCORD='https://discord.gg/qUfEwkCe';
+function discordBtn(){return '<a class="btn pri sm jm-dc" href="'+CLUB_DISCORD+'" target="_blank" rel="noopener">Open the Discord'+ico('arrow')+'</a>'}
 
 var $=function(id){return document.getElementById(id)};
 var $$=function(sel,root){return Array.prototype.slice.call((root||document).querySelectorAll(sel))};
@@ -288,12 +290,12 @@ function bindForm(px){var f=$(px+'-f');if(!f||f.dataset.bound)return;f.dataset.b
   if(!/^[^\s@]+@[^\s@]+\.[a-z]{2,}$/i.test(em)){m.textContent='That email does not look right.';m.className='small bad';inp.focus();return}
   b.disabled=true;m.className='small';m.textContent='Adding you…';
   fetch('/api/subscribe',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({email:em,website:f.website.value,src:px})}).then(function(r){return r.json().then(function(j){return {s:r.status,j:j}})}).then(function(x){
-    if(x.s===200&&x.j.ok){store.set('nl',em);var r=f.getBoundingClientRect();confetti(r.left+r.width/2,r.top);f.outerHTML='<div class="nl-done">'+ico('check')+'<span>You’re in as <b>'+esc(em)+'</b>. Your invite is on its way.</span></div>';if(m)m.remove()}
+    if(x.s===200&&x.j.ok){store.set('nl',em);var r=f.getBoundingClientRect();confetti(r.left+r.width/2,r.top);f.outerHTML='<div class="nl-done">'+ico('check')+'<span>You’re in as <b>'+esc(em)+'</b>. The club is open now.</span></div>'+discordBtn();if(m)m.remove()}
     else if(x.s===400){m.textContent='That email does not look right.';m.className='small bad';b.disabled=false}
     else throw 0}).catch(function(){m.textContent='Sign-ups open in a few days. Please try again soon.';m.className='small bad';b.disabled=false})})}
 function formHtml(px,btn){return '<form class="nl-f" id="'+px+'-f" novalidate><label class="sr" for="'+px+'-e">Email</label><input id="'+px+'-e" type="email" autocomplete="email" placeholder="you@example.com" required><input class="hp" name="website" tabindex="-1" autocomplete="off" aria-hidden="true"><button class="btn pri sm" type="submit">'+btn+'</button></form><p class="small" id="'+px+'-m"></p>'}
 function openJoin(){var me=store.get('nl',null),j=$('jm');if(!j){j=document.createElement('div');j.id='jm';j.className='jm';document.body.appendChild(j);j.addEventListener('click',function(e){if(e.target===j||e.target.closest('#jm-x'))closeJoin()})}
-  j.innerHTML='<div class="jm-card" role="dialog" aria-modal="true" aria-label="Join the club"><button class="ibtn" id="jm-x" type="button" aria-label="Close">'+ico('x')+'</button>'+monkey('mk-jm')+'<h3>Join the club</h3><p>Leave your email and we’ll send your invite, plus the Sunday Wrap: what moved in markets, the number that mattered, and a chart worth saving.</p>'+(me?'<div class="nl-done">'+ico('check')+'<span>You’re already in as <b>'+esc(me)+'</b>.</span></div>':formHtml('jm','Get my invite'))+'<p class="jm-n">Free. We use your email only to send the Sunday Wrap and your club invite. Unsubscribe any time.</p></div>';
+  j.innerHTML='<div class="jm-card" role="dialog" aria-modal="true" aria-label="Join the club"><button class="ibtn" id="jm-x" type="button" aria-label="Close">'+ico('x')+'</button>'+monkey('mk-jm')+'<h3>Join the club</h3><p>Leave your email and we’ll send your invite, plus the Sunday Wrap: what moved in markets, the number that mattered, and a chart worth saving.</p>'+(me?'<div class="nl-done">'+ico('check')+'<span>You’re already in as <b>'+esc(me)+'</b>.</span></div>'+discordBtn():formHtml('jm','Get my invite'))+'<p class="jm-n">Free. We use your email only to send the Sunday Wrap and your club invite. Unsubscribe any time.</p></div>';
   j.hidden=false;document.body.classList.add('modal-open');if(lenis)lenis.stop();bindForm('jm');setTimeout(function(){var i=$('jm-e');if(i)i.focus()},80);eyeReq()}
 function closeJoin(){var j=$('jm');if(j)j.hidden=true;document.body.classList.remove('modal-open');if(lenis)lenis.start()}
 

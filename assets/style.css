@@ -1091,3 +1091,4 @@ body.modal-open{overflow:hidden}
 :root[data-theme="light"] .f-back{background:color-mix(in srgb,var(--fc) 82%,#0F2E25)}
 .f-front{box-shadow:0 1px 0 rgba(255,255,255,.18) inset,0 0 0 1px rgba(255,255,255,.04)}
 :root[data-theme="dark"] .f-ink .f-front{box-shadow:0 0 0 1px #1F4A3C inset}
+.jm-dc{margin-top:12px;display:inline-flex}
