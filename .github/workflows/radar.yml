@@ -1,0 +1,21 @@
+name: Desk Radar
+on:
+  schedule:
+    - cron: '30 14 * * 1-5'   # 20:00 IST, Monday to Friday, after the day's filings
+  workflow_dispatch:
+    inputs:
+      date:
+        description: 'Filing date YYYYMMDD (blank = today, IST)'
+        default: ''
+jobs:
+  radar:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Scan BSE filings and post
+        env:
+          DISCORD_WEBHOOK_RADAR: ${{ secrets.DISCORD_WEBHOOK_RADAR }}
+        run: node scripts/desk-radar.js ${{ github.event.inputs.date }}
