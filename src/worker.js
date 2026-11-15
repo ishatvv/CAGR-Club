@@ -63,7 +63,9 @@ export default {
     }
     if (url.pathname === '/api/subscribers') {
       // Export: https://cagrclub.com/api/subscribers?key=YOUR_ADMIN_KEY  (set ADMIN_KEY as a Worker secret)
-      if (!env.ADMIN_KEY || url.searchParams.get('key') !== env.ADMIN_KEY) return json({ error: 'forbidden' }, 403);
+      const given = (url.searchParams.get('key') || '').trim(), real = String(env.ADMIN_KEY || '').trim();
+      // The hint says only whether a key is set and whether the lengths match; it never reveals the key.
+      if (!real || given !== real) return json({ error: 'forbidden', admin_key_set: !!real, length_matches: !!real && given.length === real.length }, 403);
       if (!env.SUBS) return json({ error: 'not_ready' }, 503);
       const rows = ['email,signed_up_at,source,country'];
       let cursor;

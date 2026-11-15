@@ -1,6 +1,7 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "cagr-club",
+  "keep_vars": true,
   "main": "src/worker.js",
   "compatibility_date": "2026-11-13",
   "assets": {
