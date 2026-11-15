@@ -34,7 +34,7 @@ var DAY=Math.floor(Date.now()/864e5),BASE=Math.floor(Date.UTC(2026,10,14)/864e5)
 function daySet(d){var t=[(d*7)%QS.length,(d*7+13)%QS.length,(d*7+29)%QS.length];if(t[1]===t[0])t[1]=(t[1]+1)%QS.length;if(t[2]===t[0]||t[2]===t[1])t[2]=(t[2]+2)%QS.length;return t}
 var todays=daySet(DAY);
 var PTS={Easy:1,Medium:2,Hard:3};
-var NAV=[['roadmap','Curriculum','map'],['practice','Practice','target'],['daily','Daily','cal'],['flaw','Flaw or fine','flag'],['library','Library','book']];
+var NAV=[['guess','Guess the stock','target'],['roadmap','Curriculum','map'],['practice','Practice','target'],['daily','Daily','cal'],['flaw','Flaw or fine','flag'],['library','Library','book']];
 var PRICED_LESSON=Math.max(1,LESSONS.findIndex?LESSONS.findIndex(function(l){return l.w==='priced'})+1:13);
 
 /* ---------- smooth scroll ---------- */
@@ -200,6 +200,7 @@ function qviz(n){
   if(n==='spark')return '<svg viewBox="0 0 120 50" preserveAspectRatio="none"><path d="'+sparkPath(11,120,46,true)+'"/></svg><em>+3 pts</em>';
   if(n==='ff')return '<span class="n">'+ico('x')+'Flaw</span><span class="y">'+ico('check')+'Fine</span>';
   if(n==='term'){var g=GLOSSARY[DAY%GLOSSARY.length];return '<b>'+esc(g.t)+'</b><i></i><i></i>'}
+  if(n==='gts')return '<span class="gq">P/E 65–80×</span><span class="gq">Margin 16%</span><b class="gq-n">?</b>';
   if(n==='stamp')return '<span class="stp">'+monkey('mk-stp')+'<em>₹0</em></span><span class="env"></span>';
   return ''}
 function la(n){return '<svg class="la" viewBox="0 0 64 64" aria-hidden="true">'+LA[n]+'</svg>'}
@@ -245,9 +246,9 @@ function faqHtml(){return '<section class="faq2"><div data-rv><h2>Before you <sp
 function ctaHtml(){return '<section class="cta2" data-rv><div class="cta-l"><canvas class="cta-ascii" id="cta-ascii" aria-hidden="true"></canvas><h2>You’re ready when the numbers start talking.</h2><p>Start with the map. Read the archive. Prove it in practice.</p><div class="row"><a class="btn pri" href="#roadmap">Start learning'+ico('arrow')+'</a><a class="btn ghost" href="#roadmap">View curriculum</a></div></div><div class="cta-r">'+[[MODULES.length,'archives'],[LESSONS.length,'lessons'],[QS.length,'practice questions'],[GLOSSARY.length,'glossary terms'],[FLAWS.length,'forecast cases'],[3,'questions every morning']].map(function(s){return '<div><b data-count="'+s[0]+'">'+s[0]+'</b><span>'+s[1]+'</span></div>'}).join('')+'</div></section>'}
 R.home=function(){
   return '<section class="qh"><canvas class="ascii" id="ascii" aria-hidden="true"></canvas><div class="qh-in"><h1 class="split">'+splitWords([['Finance, learned',0],['for real.',0]])+'</h1><p class="lede">CAGR Club takes you from your first balance sheet to the final-round interview: lessons in order, practice every day, and a club doing the same.</p><div class="row">'+joinBtn('xl')+'</div>'+creds()+'</div>'+
-  '<div class="qcards">'+[['tabs','Curriculum',MODULES.length+' archives · '+LESSONS.length+' lessons','#roadmap'],['daily','Daily three','A short set, every morning','#daily'],['spark','Practice',QS.length+' questions · speed rounds','#practice'],['ff','Flaw or fine',FLAWS.length+' forecast cases','#flaw'],['term','Library',GLOSSARY.length+' terms · reading list','#library'],['stamp','The Sunday Wrap','Five minutes on the week, every Sunday','#signup']].map(function(c,k){return '<a class="qc" href="'+c[3]+'" data-rv style="--d:'+(k*70)+'ms"><div class="qv qv-'+c[0]+'">'+qviz(c[0])+'</div><b>'+c[1]+'</b><small>'+c[2]+'</small></a>'}).join('')+'</div></section>'+
-  vastHtml()+'<section class="sec arch2"><div class="sec-h" data-rv><div><h2>We teach you <span class="dim">to read it.</span></h2><p class="lede">'+LESSONS.length+' lessons in '+MODULES.length+' archives, read in order, each one deep enough to defend in an interview.</p></div><a class="btn ghost mag" href="#roadmap">Open the curriculum'+ico('arrow')+'</a></div>'+folders()+'</section>'+storyHtml()+practiseHtml()+mgHtml()+faqHtml()+ctaHtml()};
-A.home=function(target){countUp($('view'));magnet($('view'));setStoryMode();mgRender();asciiStart();ctaAscii();
+  '<div class="qcards">'+[['tabs','Curriculum',MODULES.length+' archives · '+LESSONS.length+' lessons','#roadmap'],['daily','Daily three','A short set, every morning','#daily'],['spark','Practice',QS.length+' questions · speed rounds','#practice'],['ff','Flaw or fine',FLAWS.length+' forecast cases','#flaw'],['term','Library',GLOSSARY.length+' terms · reading list','#library'],['gts','Guess the stock','Four clues · one company · daily','#guess']].map(function(c,k){return '<a class="qc" href="'+c[3]+'" data-rv style="--d:'+(k*70)+'ms"><div class="qv qv-'+c[0]+'">'+qviz(c[0])+'</div><b>'+c[1]+'</b><small>'+c[2]+'</small></a>'}).join('')+'</div></section>'+
+  gtsHome()+vastHtml()+'<section class="sec arch2"><div class="sec-h" data-rv><div><h2>We teach you <span class="dim">to read it.</span></h2><p class="lede">'+LESSONS.length+' lessons in '+MODULES.length+' archives, read in order, each one deep enough to defend in an interview.</p></div><a class="btn ghost mag" href="#roadmap">Open the curriculum'+ico('arrow')+'</a></div>'+folders()+'</section>'+storyHtml()+practiseHtml()+mgHtml()+faqHtml()+ctaHtml()};
+A.home=function(target){countUp($('view'));magnet($('view'));setStoryMode();mgRender();mountGuess($('gt-home'),true);asciiStart();ctaAscii();
   tilt($('view'));every(1000,function(){$$('[data-cd]').forEach(function(e){e.textContent=untilNext()})});
   homeTick();if(target)setTimeout(function(){scrollToEl($(target),80)},150)};
 function homeTick(){var v=$('vast');if(v){var r=v.getBoundingClientRect(),tot=v.offsetHeight-innerHeight,p=Math.max(0,Math.min(1,-r.top/(tot||1)));
@@ -409,12 +410,12 @@ A.reading=rHtml;
 R.memos=function(){return '<section class="sec">'+mono('LIBRARY','MEMOS')+'<h1 class="big-serif">Memos.</h1><p class="lede">Short notes, one idea each.</p>'+libTabs('memos')+'<div class="memos">'+MEMOS.map(function(m,k){return '<article class="card memo"><span class="memo-n">'+pad2(k+1)+'</span><h3 class="mid-serif">'+m[0]+'</h3><p>'+m[1]+'</p></article>'}).join('')+'</div></section>'};
 
 /* ---------- footer ---------- */
-function renderFoot(){var me=store.get('nl',null);$('foot').innerHTML='<div class="ft"><div class="ft-brand"><div class="ft-mk">'+monkey('mk-ft',true)+'</div>'+monkey('mk-logo')+'<b>Learn finance, for free.</b><span class="small">Questions or ideas? Say hello in the club.</span></div><div class="ft-main"><div class="ft-cols"><div><b>Explore</b><a href="#daily">Daily</a><a href="#flaw">Flaw or fine</a></div><div><b>Learn</b><a href="#roadmap">Curriculum</a><a href="#practice">Practice</a><a href="#library">Glossary</a></div><div><b>More</b><a href="#reading">Reading list</a><a href="'+inviteHref()+'">Join the club</a></div></div><div class="ft-nl" id="signup"><b>The Sunday Wrap</b><p class="small">What moved, the number that mattered, and a chart worth saving. Every Sunday. No spam.</p>'+(me?'<div class="nl-done">'+ico('check')+'<span>You’re on the list as <b>'+esc(me)+'</b>.</span></div>':'<form class="nl-f" id="nl-f" novalidate><label class="sr" for="nl-e">Email</label><input id="nl-e" type="email" autocomplete="email" placeholder="you@example.com" required><input class="hp" name="website" tabindex="-1" autocomplete="off" aria-hidden="true"><button class="btn pri sm" type="submit">Subscribe</button></form><p class="small" id="nl-m"></p>')+'</div><p class="foot-legal">Education only, not investment advice. Companies in examples are invented. CFA® and Chartered Financial Analyst® are trademarks owned by CFA Institute. FRM® is a trademark of GARP. Neither organisation endorses or is affiliated with CAGR Club.</p></div></div>';bindNl()}
+function renderFoot(){var me=store.get('nl',null);$('foot').innerHTML='<div class="ft"><div class="ft-brand"><div class="ft-mk">'+monkey('mk-ft',true)+'</div>'+monkey('mk-logo')+'<b>Learn finance, for free.</b><span class="small">Questions or ideas? Say hello in the club.</span></div><div class="ft-main"><div class="ft-cols"><div><b>Explore</b><a href="#daily">Daily</a><a href="#flaw">Flaw or fine</a></div><div><b>Learn</b><a href="#roadmap">Curriculum</a><a href="#practice">Practice</a><a href="#library">Glossary</a></div><div><b>More</b><a href="#reading">Reading list</a><a href="'+inviteHref()+'">Join the club</a></div></div><div class="ft-nl" id="signup"><b>The Sunday Wrap</b><p class="small">What moved, the number that mattered, and a chart worth saving. Every Sunday. No spam.</p>'+(me?'<div class="nl-done">'+ico('check')+'<span>You’re on the list as <b>'+esc(me)+'</b>.</span></div>':'<form class="nl-f" id="nl-f" novalidate><label class="sr" for="nl-e">Email</label><input id="nl-e" type="email" autocomplete="email" placeholder="you@example.com" required><input class="hp" name="website" tabindex="-1" autocomplete="off" aria-hidden="true"><button class="btn pri sm" type="submit">Subscribe</button></form><p class="small" id="nl-m"></p>')+'</div><p class="foot-legal">Education only, not investment advice. Practice examples are invented; Guess the stock uses real FY25 figures. CFA® and Chartered Financial Analyst® are trademarks owned by CFA Institute. FRM® is a trademark of GARP. Neither organisation endorses or is affiliated with CAGR Club.</p></div></div>';bindNl()}
 /* ---------- shell ---------- */
 document.querySelector('.logo').innerHTML=logoMark()+'<span class="wm">CAGR<i>club</i></span>';
 renderFoot();$('bgmk').innerHTML=monkey('mk-bgm',true);
 $('nav').innerHTML=NAV.map(function(n){return '<a href="#'+n[0]+'" data-nav="'+n[0]+'">'+ico(n[2])+n[1]+'</a>'}).join('');
-$('tabs').innerHTML=[['home','Home','home']].concat(NAV.slice(0,4)).map(function(n){return '<a href="#'+n[0]+'" data-nav="'+n[0]+'">'+ico(n[2])+n[1].replace('Flaw or fine','Flaw')+'</a>'}).join('');
+$('tabs').innerHTML=[['home','Home','home']].concat(NAV.slice(0,4)).map(function(n){return '<a href="#'+n[0]+'" data-nav="'+n[0]+'">'+ico(n[2])+n[1].replace('Flaw or fine','Flaw').replace('Guess the stock','Guess')+'</a>'}).join('');
 $('find').innerHTML=ico('search')+'<span>Search</span><kbd>'+(/Mac|iPhone|iPad/.test(navigator.platform||'')?'⌘K':'Ctrl K')+'</kbd>';
 $('totop').innerHTML='<svg class="tt-ring" viewBox="0 0 60 60"><circle cx="30" cy="30" r="27"/><circle id="tt-p" cx="30" cy="30" r="27" stroke-dasharray="169.6" stroke-dashoffset="169.6" transform="rotate(-90 30 30)"/></svg>'+ico('up');
 $('totop').addEventListener('click',function(){if(lenis)lenis.scrollTo(0);else window.scrollTo({top:0,behavior:RM?'auto':'smooth'})});
@@ -435,7 +436,7 @@ function parse(){var h=(location.hash||'').replace('#',''),m;
   if(/^road-|^roadmaps$/.test(h))return ['roadmap'];if(h==='questions')return ['practice'];if(h==='tools')return ['flaw'];if(h==='glossary')return ['library'];
   if(h==='join'||h==='signup'||h==='community'||h==='wrap')return ['home','signup'];
   return [R[h]&&h!=='lesson'?h:'home']}
-var TITLES={home:'CAGR Club',roadmap:'Curriculum',practice:'Practice',daily:'Daily',flaw:'Flaw or fine',library:'Glossary',reading:'Reading list',memos:'Memos'};
+var TITLES={home:'CAGR Club',guess:'Guess the stock',roadmap:'Curriculum',practice:'Practice',daily:'Daily',flaw:'Flaw or fine',library:'Glossary',reading:'Reading list',memos:'Memos'};
 var lastView=null;
 function go(){var p=parse(),name=p[0],v=$('view');
   if(name==='home'&&p[1]&&lastView==='home'&&$(p[1])){scrollToEl($(p[1]),80);return}
@@ -512,6 +513,41 @@ document.addEventListener('keydown',function(e){
   else if(e.key==='ArrowDown'){e.preventDefault();sel=(sel+1)%Math.max(1,hits.length);palRender()}
   else if(e.key==='ArrowUp'){e.preventDefault();sel=(sel-1+hits.length)%Math.max(1,hits.length);palRender()}
   else if(e.key==='Enter'){e.preventDefault();pick(sel)}});
+
+/* Guess the stock */
+function gtsRand(seed){return function(){seed=(seed*1664525+1013904223)%4294967296;return seed/4294967296}}
+function gtsOrder(){var r=gtsRand(20261115),a=GTS_PLAYABLE.map(function(_,i){return i});for(var i=a.length-1;i>0;i--){var j=Math.floor(r()*(i+1)),t=a[i];a[i]=a[j];a[j]=t}return a}
+function gtsNo(){return Math.max(1,DAY-BASE+1)}
+function gtsNew(daily,prev){var ord=gtsOrder(),i;
+  if(daily)i=ord[(gtsNo()-1)%ord.length];else{do{i=Math.floor(Math.random()*GTS_PLAYABLE.length)}while(i===prev&&GTS_PLAYABLE.length>1)}
+  var s=GTS_PLAYABLE[i],r=gtsRand(daily?gtsNo()*97+11:Math.floor(Math.random()*1e9)),names=STOCKS.map(function(x){return x.n}).filter(function(n){return n!==s.n&&n!==s.near});
+  var opts=[s.n,s.near];while(opts.length<4){var c=names.splice(Math.floor(r()*names.length),1)[0];opts.push(c)}
+  for(var k=opts.length-1;k>0;k--){var j=Math.floor(r()*(k+1)),t=opts[k];opts[k]=opts[j];opts[j]=t}
+  return {i:i,s:s,opts:opts,shown:1,wrong:[],seq:[],done:false,win:false,daily:daily}}
+function gtsStats(){var h=store.get('gts',{}),st=0,d=gtsNo();if(!h[d]&&h[d-1])d--;while(h[d]&&h[d].win){st++;d--}var played=Object.keys(h).length,won=Object.keys(h).filter(function(k){return h[k].win}).length;return {streak:st,played:played,won:won}}
+function gtsShare(g){var cells=g.seq.map(function(x){return x?'🟩':'🟥'}).join('');for(var k=g.seq.length;k<4;k++)cells+='⬛';
+  return 'CAGR Club · Guess the Stock #'+gtsNo()+'\n'+cells+'  '+(g.win?(5-g.shown)+'/4':'X/4')+'\nCan you name the company from four clues?\ncagrclub.com/#guess'}
+function mountGuess(el,daily){if(!el)return;var g;
+  var saved=daily&&store.get('gts',{})[gtsNo()];
+  g=gtsNew(daily);if(saved){g.shown=saved.shown;g.seq=saved.seq;g.wrong=saved.wrong||[];g.done=true;g.win=saved.win}
+  function render(){var stats=gtsStats(),pts=g.win?5-g.shown:0;
+    el.innerHTML='<div class="mg-top"><div class="mg-tags"><span class="tag on">Guess the stock</span><span class="tag">'+(g.daily?'Daily #'+gtsNo():'Endless')+'</span></div><div class="mg-chips"><span>'+(g.done?'Scored':'Worth')+' <b>'+(g.done?pts:5-g.shown)+((g.done?pts:5-g.shown)===1?' pt':' pts')+'</b></span><span>Streak <b>'+stats.streak+'</b></span><span>Won <b>'+stats.won+' / '+stats.played+'</b></span></div></div>'+
+    '<ol class="gt-clues">'+GCLUES.map(function(c,k){var open=k<g.shown||g.done;return '<li class="'+(open?'open':'')+'" style="--k:'+k+'"><span class="gt-n">'+(k+1)+'</span><div><small>'+c[0]+'</small>'+(open?'<p>'+esc(c[1](g.s))+'</p>':'<p class="gt-lock">'+ico('lock')+(k===g.shown&&!g.done?'<button type="button" class="gt-rev" data-rev>Reveal for −1 pt</button>':'Locked')+'</p>')+'</div></li>'}).join('')+'</ol>'+
+    (g.done?'<div class="mg-v '+(g.win?'ok':'no')+'"><b>'+(g.win?'Got it with '+g.shown+(g.shown===1?' clue. ':' clues. '):'Not this time. ')+'</b>It’s <b class="gt-name">'+esc(g.s.n)+'</b>. '+esc(g.s.why)+'</div><div class="gt-act">'+(g.daily?'<button type="button" class="btn pri sm" data-share>'+ico('spark')+'Share result</button><a class="btn ghost sm" href="#guess" data-endless>Keep playing'+ico('arrow')+'</a>':'<button type="button" class="btn pri sm" data-next>Next company'+ico('arrow')+'</button>')+'</div>'+
+      (g.daily?'<p class="gt-next">Next company in <b data-cd>'+untilNext()+'</b></p>':'')
+    :'<p class="mg-hint">Pick the company. A wrong guess opens the next clue and costs a point.</p><div class="gt-opts">'+g.opts.map(function(o){var w=g.wrong.indexOf(o)>-1;return '<button type="button" class="gt-o'+(w?' x':'')+'" data-o="'+esc(o)+'"'+(w?' disabled':'')+'>'+esc(o)+'</button>'}).join('')+'</div>')}
+  function finish(win,src){g.done=true;g.win=win;if(win&&src){var r=src.getBoundingClientRect();confetti(r.left+r.width/2,r.top)}
+    if(g.daily){var h=store.get('gts',{});h[gtsNo()]={win:win,shown:g.shown,seq:g.seq,wrong:g.wrong};store.set('gts',h)}render()}
+  el.onclick=function(e){var t=e.target.closest('button,[data-endless]');if(!t)return;
+    if(t.hasAttribute('data-rev')){g.shown=Math.min(4,g.shown+1);render();return}
+    if(t.dataset.o){var o=t.dataset.o;if(o===g.s.n){g.seq.push(1);finish(true,t)}else{g.seq.push(0);g.wrong.push(o);if(g.shown>=4)finish(false);else{g.shown++;render()}}return}
+    if(t.hasAttribute('data-next')){g=gtsNew(false,g.i);render();return}
+    if(t.hasAttribute('data-endless')&&el.id==='gt-main'){e.preventDefault();g=gtsNew(false,g.i);render();return}
+    if(t.hasAttribute('data-share')){var txt=gtsShare(g);try{navigator.clipboard.writeText(txt).then(function(){toast('Result copied. Paste it anywhere.')},function(){toast(txt)})}catch(x){toast(txt)}}};
+  render()}
+function gtsHome(){return '<section class="exp gts-home" id="guess-home"><div class="sec-h" data-rv><div><h2>Guess the stock. <span class="dim">Four clues, one company.</span></h2><p class="lede">Real FY25 numbers from Indian listed companies. Sector, size, valuation, then one tell. The fewer clues you need, the more you score. A new company every morning.</p></div><a class="btn ghost sm" href="#guess">Play endless'+ico('arrow')+'</a></div><div class="mg card gt" id="gt-home" data-rv></div></section>'}
+R.guess=function(){return '<section class="flaw-page gt-page"><div class="sec" style="gap:14px;max-width:660px;align-items:center;text-align:center"><h1 class="big-serif">Guess <em>the stock.</em></h1><p class="lede">Four clues from one Indian listed company: its sector, its size, its valuation and one tell. Name it in as few clues as you can. One daily company for your streak, then play as many as you like.</p></div><div class="mg card gt" id="gt-main"></div><p class="small gt-src">Figures are FY25 (year to March 2025), rounded, from company results. P/E bands are approximate and move with the share price. A game, not a recommendation.</p></section>'};
+A.guess=function(){mountGuess($('gt-main'),true)};
 
 document.body.classList.add('ready');go();
 })();

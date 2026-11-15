@@ -1092,3 +1092,30 @@ body.modal-open{overflow:hidden}
 .f-front{box-shadow:0 1px 0 rgba(255,255,255,.18) inset,0 0 0 1px rgba(255,255,255,.04)}
 :root[data-theme="dark"] .f-ink .f-front{box-shadow:0 0 0 1px #1F4A3C inset}
 .jm-dc{margin-top:12px;display:inline-flex}
+/* Guess the stock */
+.gt{max-width:820px;width:100%;margin-inline:auto}
+.gt-page .gt{margin-top:28px;text-align:left}
+.gt-clues{list-style:none;margin:0;padding:0;display:grid;gap:10px}
+.gt-clues li{display:flex;gap:14px;align-items:flex-start;padding:14px 16px;border-radius:14px;background:var(--bg2);border:1px solid var(--line);min-width:0}
+.gt-clues li.open{animation:rise .45s var(--ease) both;animation-delay:calc(var(--k)*40ms);border-color:color-mix(in srgb,var(--acc) 35%,var(--line))}
+.gt-clues li>div{min-width:0}
+.gt-n{flex:none;width:28px;height:28px;border-radius:50%;display:grid;place-items:center;font:600 12px var(--mono);background:var(--bg);border:1px solid var(--line);color:var(--faint)}
+.gt-clues li.open .gt-n{background:var(--acc);color:var(--bg);border-color:var(--acc)}
+.gt-clues small{display:block;font:500 11px var(--mono);text-transform:uppercase;letter-spacing:.08em;color:var(--faint);margin-bottom:3px}
+.gt-clues p{margin:0;font-size:16px;line-height:1.5;color:var(--ink)}
+.gt-lock{display:flex;align-items:center;gap:8px;color:var(--faint)!important}
+.gt-lock .i{width:15px;height:15px}
+.gt-rev{font:inherit;font-size:14px;font-weight:600;color:var(--acc);background:none;border:0;padding:0;cursor:pointer;text-decoration:underline;text-underline-offset:3px}
+.gt-opts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.gt-o{min-height:56px;padding:10px 14px;border-radius:14px;border:1px solid var(--line);background:var(--bg);color:var(--ink);font:600 15px/1.3 inherit;font-family:inherit;cursor:pointer;transition:transform .25s var(--ease),border-color .25s,background .25s;text-align:center}
+.gt-o:hover{transform:translateY(-2px);border-color:var(--acc)}
+.gt-o.x{opacity:.45;text-decoration:line-through;cursor:not-allowed;transform:none;background:var(--neg-soft);border-color:transparent;color:var(--neg)}
+.gt-act{display:flex;gap:10px;flex-wrap:wrap}
+.gt-next{margin:0;font:500 12px var(--mono);color:var(--faint);text-transform:uppercase;letter-spacing:.06em}
+.gt-name{color:var(--ink)}
+.gt-src{max-width:820px;margin:14px auto 0;color:var(--faint);text-align:center}
+@media (max-width:520px){.gt-opts{grid-template-columns:minmax(0,1fr)}.gt-clues li{padding:12px}}
+.qv-gts{display:flex;flex-wrap:wrap;gap:6px;align-items:center;justify-content:center}
+.qv-gts .gq{font:500 11px var(--mono);padding:5px 9px;border-radius:999px;background:var(--bg2);border:1px solid var(--line);color:var(--ink);transition:transform .4s var(--ease)}
+.qv-gts .gq-n{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;background:var(--acc);color:var(--bg);font-size:18px}
+.qc:hover .qv-gts .gq:first-child{transform:translateY(-4px) rotate(-3deg)}.qc:hover .qv-gts .gq:nth-child(2){transform:translateY(3px) rotate(2deg)}
