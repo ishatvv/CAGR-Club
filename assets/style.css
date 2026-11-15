@@ -980,3 +980,21 @@ main{overflow-x:visible}
 .jm-card .nl-f{width:100%;margin-top:6px}
 .jm-n{font-size:12.5px;color:var(--faint)}
 body.modal-open{overflow:hidden}
+/* fixes: header above page, monochrome icons */
+.top{z-index:30!important}
+.fi-i{width:30px;height:30px;fill:none;stroke:var(--ink);stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
+.vc{gap:8px;padding:14px 16px}
+.vc small{color:var(--ink);font-weight:500}
+.qv{filter:grayscale(1) contrast(1.05)}
+.qv-tabs i{background:color-mix(in srgb,var(--ink) calc(30% + var(--k)*18%),var(--surface))!important}
+.qv-daily span{color:var(--ink)!important}
+.qv-spark path{stroke:var(--ink)!important}
+.qv-spark em{color:var(--ink)!important;background:var(--raised)!important}
+.qv-ff .n,.qv-ff .y{color:var(--ink)!important;background:transparent!important;border-color:var(--line2)!important}
+.mk-stp .mk-b,.mk-stp .mk-e{fill:#222}
+.stp em{color:#222!important}
+.qc::after{display:none}
+.qv-ff span{display:inline-flex;align-items:center;gap:6px}.qv-ff .i{width:14px;height:14px}
+.qv-tabs i{background:var(--surface)!important;border:1.3px solid var(--ink);box-shadow:none!important}
+.qv-tabs i::before{background:var(--surface)!important;border:1.3px solid var(--ink);border-bottom:0;top:-9px!important;left:-1.3px!important}
+@media (max-width:1560px){.find{width:40px;padding:0;justify-content:center}.find span,.find kbd{display:none}}

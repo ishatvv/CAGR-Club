@@ -186,13 +186,27 @@ function qviz(n){
   if(n==='tabs')return ['#2B9D79','#E9C46A','#E07A5F','#8AB6D6'].map(function(c,k){return '<i style="--c:'+c+';--k:'+k+'"></i>'}).join('');
   if(n==='daily')return '<span>?</span><span>?</span><span>?</span><em data-cd>'+untilNext()+'</em>';
   if(n==='spark')return '<svg viewBox="0 0 120 50" preserveAspectRatio="none"><path d="'+sparkPath(11,120,46,true)+'"/></svg><em>+3 pts</em>';
-  if(n==='ff')return '<span class="n">Flaw</span><span class="y">Fine</span>';
+  if(n==='ff')return '<span class="n">'+ico('x')+'Flaw</span><span class="y">'+ico('check')+'Fine</span>';
   if(n==='term'){var g=GLOSSARY[DAY%GLOSSARY.length];return '<b>'+esc(g.t)+'</b><i></i><i></i>'}
   if(n==='stamp')return '<span class="stp">'+monkey('mk-stp')+'<em>₹0</em></span><span class="env"></span>';
   return ''}
 function la(n){return '<svg class="la" viewBox="0 0 64 64" aria-hidden="true">'+LA[n]+'</svg>'}
-var VAST=[['DCF','bell',6,16],['EBITDA','bars',20,8],['WACC','net',34,18],['Working capital','candles',62,10],['ROCE','rings',78,20],['Moats','globe',92,9],['Bank NIM','bars',8,74],['Capex cycles','candles',22,86],['Consensus','net',40,76],['Free cash flow','bell',60,86],['Credit spreads','globe',76,74],['Unit economics','gold',92,84]];
-function vastHtml(){return '<section class="vast" id="vast"><div class="vast-pin"><h2 class="vast-t">Every number<br><span class="dim">has a story.</span></h2>'+VAST.map(function(v,k){return '<span class="vc" data-k="'+k+'" style="left:'+v[2]+'%;top:'+v[3]+'%">'+la(v[1])+'<small>'+v[0]+'</small></span>'}).join('')+'</div></section>'}
+var FI={
+ dcf:'<path d="M3 20h18"/><rect x="4" y="9" width="3" height="11"/><rect x="9" y="11" width="3" height="9"/><rect x="14" y="13" width="3" height="7"/><path d="M21 5H6m0 0 3-2.5M6 5l3 2.5"/>',
+ pnl:'<rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h8M8 12h5M8 16h8"/><path d="M16 11.5v1"/>',
+ wacc:'<circle cx="12" cy="12" r="8.5"/><path d="M12 3.5V12l6.5 5.5"/>',
+ cycle:'<path d="M20 12a8 8 0 0 1-14 5.3M4 12a8 8 0 0 1 14-5.3"/><path d="M18 3v3.7h-3.7M6 21v-3.7h3.7"/>',
+ pct:'<path d="M18 6 6 18"/><circle cx="7.5" cy="7.5" r="2.5"/><circle cx="16.5" cy="16.5" r="2.5"/>',
+ moat:'<path d="M12 3 5 6v5c0 4.5 3 8 7 10 4-2 7-5.5 7-10V6z"/><path d="m9 12 2 2 4-4"/>',
+ bank:'<path d="M3 9.5 12 4l9 5.5"/><path d="M4 20h16M5 10v8M9.5 10v8M14.5 10v8M19 10v8"/>',
+ factory:'<path d="M3 21V10l5 3V10l5 3V5h4l1 16z"/><path d="M3 21h18"/>',
+ people:'<circle cx="8" cy="8" r="3"/><circle cx="16.5" cy="9" r="2.5"/><path d="M2.5 20c.5-3.5 2.8-5.5 5.5-5.5s5 2 5.5 5.5M14 15c2.8-.6 6 .8 7 4.5"/>',
+ cash:'<rect x="2.5" y="6" width="19" height="12" rx="2"/><circle cx="12" cy="12" r="2.8"/><path d="M6 9.5v5M18 9.5v5"/>',
+ spread:'<path d="M3 17c4-1 6-6 9-6s5 3 9 2"/><path d="M3 11c4-1 6-5 9-5s5 2 9 1" opacity=".55"/><path d="M15 8.5v4.5"/>',
+ unit:'<path d="M20.5 13.5 13 21l-9-9V4h8z"/><circle cx="8.5" cy="8.5" r="1.5"/>'};
+function fi(n){return '<svg class="fi-i" viewBox="0 0 24 24" aria-hidden="true">'+FI[n]+'</svg>'}
+var VAST=[['DCF','dcf',6,16],['EBITDA','pnl',20,8],['WACC','wacc',34,18],['Working capital','cycle',62,10],['ROCE','pct',78,20],['Moats','moat',92,9],['Bank NIM','bank',8,74],['Capex cycles','factory',22,86],['Consensus','people',40,76],['Free cash flow','cash',60,86],['Credit spreads','spread',76,74],['Unit economics','unit',92,84]];
+function vastHtml(){return '<section class="vast" id="vast"><div class="vast-pin"><h2 class="vast-t">Every number<br><span class="dim">has a story.</span></h2>'+VAST.map(function(v,k){return '<span class="vc" data-k="'+k+'" style="left:'+v[2]+'%;top:'+v[3]+'%">'+fi(v[1])+'<small>'+v[0]+'</small></span>'}).join('')+'</div></section>'}
 function mapHtml(){var W=900,H=660,rx=70,ry=H/2,ax=330,lx=590,cols=['#4FD1A5','#F2C14E','#F2765E','#8AB6D6'],p='',t='',n=0,tot=LESSONS.length;
   MODULES.forEach(function(m,i){var ay=H*(i+.5)/MODULES.length,c=cols[i%4];
     p+='<path class="ml" style="--d:'+(i*120)+'ms" stroke="'+c+'" d="M'+rx+' '+ry+'C'+(rx+150)+' '+ry+','+(ax-150)+' '+ay+','+ax+' '+ay+'" pathLength="1"/>';
