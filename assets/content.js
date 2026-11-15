@@ -191,3 +191,18 @@ var QS=[
  {t:'Markets',d:'Medium',type:'num',q:'ROE 16%, growth 10%, cost of equity 13%. What price-to-book multiple is justified?',a:2,tol:.05,unit:'×',s:'(16 − 10) ÷ (13 − 10) = 2.0 times book.'}
 ];
 GLOSS=GLOSS.concat([['CAGR','Compound annual growth rate: the steady yearly rate that links a starting value to an ending one.'],['ROCE','Return on capital employed: operating profit after tax divided by equity plus debt.'],['Net interest margin','A bank\'s interest earned minus interest paid, as a share of its interest-earning assets.'],['Cash conversion cycle','Inventory days plus receivable days minus payable days.'],['Free float','Shares available to trade, excluding those held by promoters and other locked-in holders.']]);
+
+FLAWS=FLAWS.concat([
+ ['Airline: fuel is 35% of costs. Crude rises 30% and the model keeps margins flat with no fare increase.',true,'Fuel alone would add about 10% to total costs. Without higher fares, margins must fall.'],
+ ['Consumer company: volumes +3%, price and mix +5%, revenue forecast +8.2%.',false,'1.03 × 1.05 = 1.0815, so about 8.2%. The pieces add up.'],
+ ['Bank: credit cost forecast at zero for the next five years.',true,'Every loan book has some defaults. Zero credit cost is not a realistic steady state.'],
+ ['IT company: rupee assumed flat against the dollar; dollar revenue +8%, rupee revenue +8%.',false,'With a flat rupee, dollar and rupee growth match.'],
+ ['Cement company: runs its plants at 97% utilisation every year for five years.',true,'That leaves no room for maintenance shutdowns or a weak monsoon quarter. Sustained levels are usually well below that.'],
+ ['Retailer: like-for-like growth 6%, new stores add 8%; total revenue growth about 14.5%.',false,'1.06 × 1.08 = 1.145. The pieces add up.']
+]);
+var ROLES=[
+ {id:'era',sym:'ERA',t:'Equity Research Analyst',live:true,d:'Read accounts, value businesses, build models and pitch stocks.',mods:MODULES.map(function(m){return m.t}),hue:'violet'},
+ {id:'cra',sym:'CRA',t:'Credit Analyst',live:false,d:'Read companies the way lenders do: cash, leverage, covenants and recovery.',mods:['Cash before earnings','Leverage and coverage','Debt documents and covenants','Ratings method','Bond maths','The credit memo'],hue:'mint'},
+ {id:'iba',sym:'IBA',t:'Investment Banking Analyst',live:false,d:'Comparable companies, precedent deals, merger models and pitch books.',mods:['Accounting for deals','Trading comparables','Precedent transactions','Merger models','LBO basics','The pitch book'],hue:'pink'},
+ {id:'pea',sym:'PEA',t:'Private Equity Analyst',live:false,d:'Screen deals, test unit economics, model buyouts and write the investment memo.',mods:['Screening deals','Unit economics','LBO modelling','Due diligence','Value creation plans','The investment memo'],hue:'sun'}
+];

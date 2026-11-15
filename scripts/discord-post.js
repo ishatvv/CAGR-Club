@@ -5,7 +5,7 @@
 //   DISCORD_WEBHOOK_LESSONS webhook for #lesson-notes (optional; falls back to DAILY)
 const fs = require('fs'), vm = require('vm'), path = require('path');
 const ctx = {}; vm.createContext(ctx);
-vm.runInContext(fs.readFileSync(path.join(__dirname, '..', 'assets', 'content.js'), 'utf8'), ctx);
+for (const f of ['content.js','glossary.js']) vm.runInContext(fs.readFileSync(path.join(__dirname, '..', 'assets', f), 'utf8'), ctx);
 const { QS, LESSONS, MODULES, GLOSS } = ctx;
 const SITE = 'https://cagrclub.com';
 const DAY = Math.floor(Date.now() / 864e5), BASE = Math.floor(Date.UTC(2026, 10, 14) / 864e5);
