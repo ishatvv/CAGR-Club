@@ -998,3 +998,4 @@ body.modal-open{overflow:hidden}
 .qv-tabs i{background:var(--surface)!important;border:1.3px solid var(--ink);box-shadow:none!important}
 .qv-tabs i::before{background:var(--surface)!important;border:1.3px solid var(--ink);border-bottom:0;top:-9px!important;left:-1.3px!important}
 @media (max-width:1560px){.find{width:40px;padding:0;justify-content:center}.find span,.find kbd{display:none}}
+.stamp-slop{white-space:nowrap;font-size:46px;right:4%}@media (max-width:620px){.stamp-slop{font-size:32px}}
