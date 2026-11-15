@@ -791,3 +791,4 @@ h1 em,h2 em,.big-serif em,.split em{font-family:var(--serif);font-weight:400;fon
 @media (max-width:1000px){.hcards{grid-template-columns:repeat(3,minmax(0,1fr))}}
 @media (max-width:620px){.hcards{grid-template-columns:repeat(2,minmax(0,1fr))}.hc:last-child{grid-column:1/-1}}
 .hc{background:var(--surface);backdrop-filter:none;-webkit-backdrop-filter:none}
+.eyebrow{display:none!important}
