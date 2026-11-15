@@ -133,13 +133,10 @@ intv:{t:'What research interviews test',min:8,sum:'The parts of an interview, an
 };
 var LESSONS=[OLD[0],OLD[1],OLD[2],OLD[3],OLD[4],NEWL.wc,NEWL.roc,NEWL.eq,OLD[5],OLD[6],OLD[7],NEWL.coc,NEWL.rdcf,OLD[8],NEWL.rev,NEWL.debt,NEWL.scen,NEWL.bank,NEWL.cem,NEWL.it,NEWL.fmcg,NEWL.ar,NEWL.cons,NEWL.earn,NEWL.note,NEWL.pitch,NEWL.intv];
 var MODULES=[
- {t:'Read the numbers',d:'The three statements and how one event moves all of them.',l:[1,2,3,4]},
- {t:'Judge the business',d:'Ratios, cash and returns: is this a good business, and is its profit real?',l:[5,6,7,8]},
- {t:'Value it',d:'Discounting, DCF, multiples, cost of capital, and what the price already assumes.',l:[9,10,11,12,13]},
- {t:'Model it',d:'Drivers, debt, and ranges instead of single numbers.',l:[14,15,16,17]},
- {t:'Know a sector',d:'How banks, commodities, IT and consumer companies are read differently.',l:[18,19,20,21]},
- {t:'Do the research',d:'Annual reports, consensus and the quarterly results routine.',l:[22,23,24]},
- {t:'Write and pitch',d:'Initiation notes, stock pitches, and what interviews actually test.',l:[25,26,27]}
+ {t:'Read the numbers',d:'The three statements, how one event moves all of them, and where profit and cash part ways.',l:[1,2,3,4]},
+ {t:'Judge the business',d:'Returns, cash conversion and moats: is this a good business, and is its profit real?',l:[5,6,7,8]},
+ {t:'Value it',d:'DCF, multiples, cost of capital and models built on drivers, ending with what the price already assumes.',l:[9,10,11,12,13,14,15,16,17]},
+ {t:'Know a sector',d:'How banks, commodities, IT and consumer companies are read, then the research routine and the pitch.',l:[18,19,20,21,22,23,24,25,26,27]}
 ];
 
 /* Every question has one correct answer. type 'num': numeric with tolerance; type 'mcq': single correct option index. */
